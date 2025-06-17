@@ -134,8 +134,21 @@ class McKinseyGradeAnalyzer:
         # Build competitive context
         competitive_context = self._build_competitive_context(context)
         
+        # Extract framework metadata
+        academic_insights = framework.customizations.get("academic_insights", {})
+        industry_adjustments = framework.customizations.get("industry_adjustments", {})
+        
         prompt = f"""
-You are analyzing {context.company_name}, a {context.stage} {context.industry} company.
+You are a McKinsey senior partner analyzing {context.company_name}, a {context.stage} {context.industry} company.
+
+FRAMEWORK SELECTION CONTEXT:
+- Framework: {framework.base_framework.name} ({framework.industry_variant} variant)
+- Fit Score: {academic_insights.get('fit_score', 75)}/100
+- Selection Rationale: {'; '.join(academic_insights.get('rationale', ['Contextually appropriate'])[:2])}
+- Key Risks: {'; '.join(academic_insights.get('risks', ['Standard implementation risks'])[:2])}
+
+INDUSTRY-SPECIFIC CUSTOMIZATION:
+{self._format_industry_customization(framework, industry_adjustments)}
 
 COMPANY SITUATION:
 {context.strategic_narrative}
@@ -853,3 +866,38 @@ Strategic analysis indicates several critical priorities:
         """Close aiohttp session"""
         if self.session:
             await self.session.close()
+    
+    def _format_industry_customization(
+        self, 
+        framework: CustomizedFramework,
+        industry_adjustments: Dict[str, Any]
+    ) -> str:
+        """Format industry-specific customization for prompts"""
+        
+        if not industry_adjustments:
+            return "- No industry-specific customizations"
+            
+        customization = []
+        
+        # Handle axis mappings for matrix frameworks
+        if "x_axis" in industry_adjustments:
+            customization.append(f"- X-Axis: {industry_adjustments.get('x_label', industry_adjustments['x_axis'])}")
+            customization.append(f"- Y-Axis: {industry_adjustments.get('y_label', industry_adjustments['y_axis'])}")
+            
+        # Handle thresholds
+        if "thresholds" in industry_adjustments:
+            customization.append("- Custom Thresholds:")
+            for key, value in industry_adjustments["thresholds"].items():
+                customization.append(f"  - {key.replace('_', ' ').title()}: {value}")
+                
+        # Handle custom metrics
+        if "primary_metrics" in industry_adjustments:
+            customization.append(f"- Primary Metrics: {', '.join(industry_adjustments['primary_metrics'])}")
+            
+        # Handle quadrants for BCG
+        if "quadrants" in industry_adjustments:
+            customization.append("- Quadrant Definitions:")
+            for quad, desc in industry_adjustments["quadrants"].items():
+                customization.append(f"  - {quad.title()}: {desc}")
+                
+        return '\n'.join(customization) if customization else "- Standard framework application"

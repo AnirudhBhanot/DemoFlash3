@@ -85,16 +85,25 @@ class EnhancedMichelinEngine:
             raise
         
         try:
-            # Apply BCG Matrix with industry customization
-            logger.info("Applying BCG Matrix analysis...")
+            # Log which frameworks were selected
+            framework_names = [f.base_framework.name for f in phase1_frameworks]
+            logger.info(f"Selected frameworks: {framework_names}")
+            
+            # Apply primary framework analysis
             bcg_framework = next(
                 (f for f in phase1_frameworks if f.base_framework.id == "bcg_matrix"),
-                phase1_frameworks[0] if phase1_frameworks else None
+                None
             )
             
+            if bcg_framework:
+                logger.info("Applying BCG Matrix analysis...")
+            else:
+                logger.info("BCG Matrix not selected (good for pre-seed!), using primary framework...")
+                bcg_framework = phase1_frameworks[0] if phase1_frameworks else None
+                
             if not bcg_framework:
-                logger.error("No BCG framework found")
-                raise ValueError("No BCG framework available")
+                logger.error("No frameworks available")
+                raise ValueError("No frameworks available")
                 
             bcg_analysis = await self.mckinsey_analyzer.generate_framework_analysis(
                 bcg_framework, context
