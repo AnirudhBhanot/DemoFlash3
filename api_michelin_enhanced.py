@@ -15,7 +15,7 @@ from pydantic import BaseModel
 
 # Import enhanced components
 from strategic_context_engine import StrategicContextEngine
-from intelligent_framework_selector import IntelligentFrameworkSelector
+from enhanced_framework_selector import EnhancedFrameworkSelector
 from mckinsey_grade_analyzer import McKinseyGradeAnalyzer
 from enhanced_phase3_analyzer import EnhancedPhase3Analyzer
 
@@ -47,7 +47,7 @@ class EnhancedMichelinEngine:
     
     def __init__(self):
         self.context_engine = StrategicContextEngine()
-        self.framework_selector = IntelligentFrameworkSelector()
+        self.framework_selector = EnhancedFrameworkSelector()
         self.mckinsey_analyzer = McKinseyGradeAnalyzer()
         self.phase3_analyzer = EnhancedPhase3Analyzer()
         
@@ -64,12 +64,18 @@ class EnhancedMichelinEngine:
             )
             logger.info("Context built successfully")
             
-            # Select and customize frameworks for Phase 1
-            logger.info("Selecting frameworks...")
-            phase1_frameworks = await self.framework_selector.select_frameworks(
-                context, max_frameworks=3
+            # Select and customize frameworks for Phase 1 using enhanced selector
+            logger.info("Selecting frameworks using enhanced MIT/HBS methodology...")
+            result = await self.framework_selector.select_frameworks_for_startup(
+                startup_data.model_dump(), max_frameworks=3
             )
-            logger.info(f"Selected {len(phase1_frameworks)} frameworks")
+            
+            if not result["success"]:
+                raise ValueError(f"Framework selection failed: {result.get('error')}")
+                
+            # Extract frameworks from result
+            phase1_frameworks = self._convert_enhanced_frameworks(result["frameworks"])
+            logger.info(f"Selected {len(phase1_frameworks)} frameworks with methodology: {result.get('methodology')}")
         except ZeroDivisionError as e:
             logger.error(f"Division by zero during initialization: {str(e)}", exc_info=True)
             # Fall back to decomposed analysis
@@ -1031,6 +1037,30 @@ Be specific and actionable.
         """Close all resources"""
         await self.mckinsey_analyzer.close()
         await self.phase3_analyzer.close()
+    
+    def _convert_enhanced_frameworks(self, framework_data: List[Dict]) -> List[Any]:
+        """Convert enhanced framework format to expected format"""
+        from intelligent_framework_selector import CustomizedFramework
+        from framework_intelligence.framework_database import get_framework_by_id
+        
+        converted = []
+        for fw_data in framework_data:
+            # Get base framework
+            framework = get_framework_by_id(fw_data["id"])
+            if framework:
+                # Create a mock CustomizedFramework object
+                customized = type('CustomizedFramework', (), {
+                    'base_framework': framework,
+                    'customizations': fw_data.get("customizations", {}),
+                    'industry_variant': fw_data.get("industry_variant"),
+                    'specific_metrics': [],
+                    'thresholds': fw_data.get("customizations", {}).get("industry_adjustments", {}).get("thresholds", {}),
+                    'implementation_guide': fw_data.get("implementation_guide", {}),
+                    'expected_insights': fw_data.get("expected_insights", [])
+                })()
+                converted.append(customized)
+        
+        return converted
 
 
 # Initialize engine

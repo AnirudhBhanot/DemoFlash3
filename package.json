@@ -15,8 +15,7 @@
     "flash-frontend-apple"
   ],
   "engines": {
-    "node": ">=16.0.0",
-    "python": ">=3.8.0"
+    "node": ">=16.0.0"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",

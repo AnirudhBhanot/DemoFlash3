@@ -10,8 +10,8 @@ from dataclasses import dataclass, field
 from datetime import datetime
 import json
 
-from framework_taxonomy import *
-from framework_tags_database import *
+from framework_intelligence.framework_taxonomy import *
+from framework_intelligence.framework_tags_database import *
 
 
 @dataclass
@@ -25,10 +25,12 @@ class CompanyContext:
     
     # Problems and challenges
     primary_problems: List[ProblemArchetype]
-    secondary_problems: List[ProblemArchetype] = field(default_factory=list)
     
     # Resources and constraints
     available_data: List[DataRequirement]
+    
+    # Optional fields with defaults
+    secondary_problems: List[ProblemArchetype] = field(default_factory=list)
     timeline_days: int = 90
     budget_usd: Optional[int] = None
     has_data_analyst: bool = False
@@ -299,7 +301,12 @@ class AdvancedFrameworkSelector:
             return FrameworkRecommendation(framework_id=framework_id, fit_score=0, urgency_score=0, confidence=0)
             
         tags = self.tags_db[framework_id]
-        recommendation = FrameworkRecommendation(framework_id=framework_id)
+        recommendation = FrameworkRecommendation(
+            framework_id=framework_id,
+            fit_score=0,
+            urgency_score=0,
+            confidence=0
+        )
         
         # 1. Stage Fit (20% weight)
         if context.stage in tags.temporal_stages:

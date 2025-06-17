@@ -7,21 +7,21 @@ services:
     startCommand: "python api_server_unified.py"
     envVars:
       - key: PORT
-        value: "10000"
+        value: 10000
       - key: PYTHONUNBUFFERED
-        value: "1"
+        value: 1
       - key: DISABLE_AUTH
-        value: "true"
+        value: true
       - key: DEEPSEEK_API_KEY
-        value: "sk-f68b7148243e4663a31386a5ea6093cf"
+        value: sk-f68b7148243e4663a31386a5ea6093cf
       - key: DEEPSEEK_BASE_URL
-        value: "https://api.deepseek.com/v1"
+        value: https://api.deepseek.com/v1
       - key: MODEL_PATH
-        value: "./models/production_v45_fixed"
+        value: ./models/production_v45_fixed
       - key: ENABLE_PATTERN_SYSTEM
-        value: "true"
+        value: true
       - key: LOG_LEVEL
-        value: "INFO"
+        value: INFO
     autoDeploy: true
     
   # Frontend Service  

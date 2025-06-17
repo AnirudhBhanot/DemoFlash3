@@ -380,6 +380,14 @@ try:
 except Exception as e:
     logger.warning(f"Could not import Intelligent Framework endpoints: {e}")
 
+# Include Enhanced Framework endpoints (MIT/HBS methodology)
+try:
+    from api_framework_enhanced import include_enhanced_framework_routes
+    include_enhanced_framework_routes(app)
+    logger.info("Enhanced Framework endpoints enabled - MIT/HBS advanced framework selection methodology")
+except Exception as e:
+    logger.warning(f"Could not import Enhanced Framework endpoints: {e}")
+
 
 def calculate_camp_scores(features: Dict[str, Any]) -> Dict[str, float]:
     """Calculate normalized CAMP scores from features (0-1 range)"""

@@ -4,7 +4,7 @@ Framework Tags Database - Comprehensive tagging for all frameworks
 This implements the multi-dimensional taxonomy for framework selection
 """
 
-from framework_taxonomy import *
+from framework_intelligence.framework_taxonomy import *
 
 
 def create_framework_tags_database():

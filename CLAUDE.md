@@ -1,6 +1,50 @@
-# FLASH Platform - Context for Claude V27
+# FLASH Platform - Context for Claude V28
 
-## Latest Updates (June 17, 2025 - V27)
+## Latest Updates (June 17, 2025 - V28)
+
+### Advanced Framework Intelligence System - Complete Implementation
+- **Issue**: User noted "BCG Matrix is still being selected as #1" and questioned the selection logic
+- **Solution**: Implemented comprehensive MIT/HBS-grade framework selection system
+
+- **Phase 1 - Multi-Dimensional Taxonomy**:
+  - 7 dimensions: Temporal Stage, Problem Archetype, Decision Context, Data Requirements, Complexity, Outcome Type, Industry
+  - 20+ metadata fields per framework
+  - Comprehensive tagging for 500+ frameworks
+
+- **Phase 2 - Contextual Effectiveness**:
+  - Empirical effectiveness scoring by stage/industry/team size
+  - Anti-pattern database (when NOT to use frameworks)
+  - Success/failure pattern tracking
+  - ROI and time-to-impact metrics
+
+- **Phase 3 - Intelligent Matching**:
+  - 6-factor weighted scoring algorithm
+  - Crisis mode detection and adjustment
+  - Portfolio diversity logic
+  - Prerequisite and dependency tracking
+
+- **Phase 4 - Industry Customization**:
+  - B2B SaaS: BCG uses NRR/ARR instead of market share
+  - Marketplace: Take rate/GMV focus, dual-sided economics
+  - FinTech: Regulatory risk scoring, ARPU optimization
+  - Hardware: Inventory turns, warranty reserves
+
+- **Phase 5 - Integration**:
+  - New endpoints: `/api/frameworks/enhanced/select`, `/journey`, `/details`
+  - Seamless integration with existing Michelin analysis
+  - Executive report generation
+  - 12-month journey planning
+
+- **Key Innovation**: Framework selection now follows proper hierarchy:
+  1. **Diagnostic First** (Pre-PMF): Jobs-to-be-Done, Customer Development
+  2. **Prescriptive Second** (Post-PMF): Unit Economics, Growth Loops
+  3. **Strategic Last** (Scale): BCG Matrix, Porter's Five Forces
+
+- **Testing**: All systems validated and operational
+  - API endpoint: `http://localhost:8001/api/frameworks/enhanced/test` ✅
+  - Methodology: "MIT/HBS Advanced Framework Selection v2.0"
+
+# FLASH Platform - Context for Claude V27
 
 ### Enhanced Michelin Analysis with McKinsey-Grade Output
 - **Issue**: User reported "phase 3 analysis aren't working" and frameworks had "very generalized output and not McKinsey or BCG grade specificities"
