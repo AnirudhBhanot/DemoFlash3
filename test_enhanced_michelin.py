@@ -42,8 +42,8 @@ test_data = {
 async def test_enhanced_phase1():
     """Test Phase 1 enhanced analysis"""
     async with aiohttp.ClientSession() as session:
-        # Test decomposed first to ensure basic connectivity
-        url = "http://localhost:8001/api/michelin/decomposed/analyze/phase1"
+        # Test enhanced approach
+        url = "http://localhost:8001/api/michelin/enhanced/analyze/phase1"
         
         print("Testing Enhanced Michelin Phase 1 Analysis...")
         print(f"Company: {test_data['startup_name']}")

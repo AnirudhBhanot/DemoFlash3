@@ -56,24 +56,50 @@ class EnhancedMichelinEngine:
         
         logger.info(f"Starting enhanced Phase 1 analysis for {startup_data.startup_name}")
         
-        # Build comprehensive context
-        context = await self.context_engine.build_company_context(
-            startup_data.model_dump()
-        )
+        try:
+            # Build comprehensive context
+            logger.info("Building company context...")
+            context = await self.context_engine.build_company_context(
+                startup_data.model_dump()
+            )
+            logger.info("Context built successfully")
+            
+            # Select and customize frameworks for Phase 1
+            logger.info("Selecting frameworks...")
+            phase1_frameworks = await self.framework_selector.select_frameworks(
+                context, max_frameworks=3
+            )
+            logger.info(f"Selected {len(phase1_frameworks)} frameworks")
+        except ZeroDivisionError as e:
+            logger.error(f"Division by zero during initialization: {str(e)}", exc_info=True)
+            # Fall back to decomposed analysis
+            raise
+        except Exception as e:
+            logger.error(f"Error during initialization: {str(e)}", exc_info=True)
+            raise
         
-        # Select and customize frameworks for Phase 1
-        phase1_frameworks = await self.framework_selector.select_frameworks(
-            context, max_frameworks=3
-        )
-        
-        # Apply BCG Matrix with industry customization
-        bcg_framework = next(
-            (f for f in phase1_frameworks if f.base_framework.id == "bcg_matrix"),
-            phase1_frameworks[0]
-        )
-        bcg_analysis = await self.mckinsey_analyzer.generate_framework_analysis(
-            bcg_framework, context
-        )
+        try:
+            # Apply BCG Matrix with industry customization
+            logger.info("Applying BCG Matrix analysis...")
+            bcg_framework = next(
+                (f for f in phase1_frameworks if f.base_framework.id == "bcg_matrix"),
+                phase1_frameworks[0] if phase1_frameworks else None
+            )
+            
+            if not bcg_framework:
+                logger.error("No BCG framework found")
+                raise ValueError("No BCG framework available")
+                
+            bcg_analysis = await self.mckinsey_analyzer.generate_framework_analysis(
+                bcg_framework, context
+            )
+            logger.info("BCG analysis completed")
+        except ZeroDivisionError as e:
+            logger.error(f"Division by zero in BCG analysis: {str(e)}", exc_info=True)
+            raise
+        except Exception as e:
+            logger.error(f"Error in BCG analysis: {str(e)}", exc_info=True)
+            raise
         
         # Apply Porter's Five Forces with context
         porters_framework = next(
@@ -467,7 +493,7 @@ Be specific and reference {context.industry} dynamics.
             f"{bcg_analysis.get('framework_positioning', {}).get('classification', 'emerging player')} "
             f"in the {context.industry} market. With {context.key_metrics.get('ltv_cac', 0):.1f}x LTV/CAC "
             f"and {context.key_metrics.get('runway', 0)} months runway, the company must "
-            f"{context.strategic_priorities[0].lower() if context.strategic_priorities else 'focus on efficient growth'}."
+            f"{context.key_challenges[0].lower() if context.key_challenges else 'focus on efficient growth'}."
         )
         
     def _format_bcg_analysis(
@@ -1038,7 +1064,7 @@ async def analyze_phase1_enhanced(
         )
         
     except Exception as e:
-        logger.error(f"Enhanced Phase 1 failed: {e}")
+        logger.error(f"Enhanced Phase 1 failed: {e}", exc_info=True)
         raise HTTPException(
             status_code=500,
             detail=f"Analysis failed: {str(e)}"

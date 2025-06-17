@@ -465,10 +465,18 @@ class StrategicContextEngine:
             if metric in ["nrr", "growth", "ltv_cac"]:
                 actual = data.get(f"{metric}_percent", data.get(metric, 0))
                 if actual > 0 and value > 0:
-                    similarity = 1 - abs(actual - value) / value
-                    similarity_scores.append(max(0, similarity))
+                    try:
+                        similarity = 1 - abs(actual - value) / value
+                        similarity_scores.append(max(0, similarity))
+                    except ZeroDivisionError:
+                        logger.warning(f"Division by zero in pattern matching: value={value}")
+                        continue
                     
-        return np.mean(similarity_scores) if similarity_scores else 0
+        try:
+            return np.mean(similarity_scores) if similarity_scores else 0
+        except Exception as e:
+            logger.error(f"Error calculating similarity scores: {e}")
+            return 0
         
     def _generate_primary_strategic_question(
         self, data: Dict[str, Any], 

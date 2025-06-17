@@ -737,7 +737,7 @@ Focus on {context.industry}-specific metrics.
         # Operational metrics
         metrics.append({
             "metric": "Burn Multiple",
-            "current": f"{context.key_metrics.get('burn_rate', 100000) * 12 / max(current_revenue, 1):.1f}x",
+            "current": f"{context.key_metrics.get('burn_rate', 100000) * 12 / max(current_revenue + 1, 1):.1f}x",
             "target": f"< {context.industry_benchmarks.median_burn_multiple}x",
             "frequency": "Monthly",
             "owner": "CFO",

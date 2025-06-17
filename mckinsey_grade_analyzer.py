@@ -427,19 +427,19 @@ COMPETITIVE LANDSCAPE:
             },
             "financial_position": {
                 "burn_multiple": (
-                    f"{context.key_metrics.get('burn_rate', 0) * 12 / max(context.key_metrics.get('revenue', 1), 1):.1f}x"
+                    f"{context.key_metrics.get('burn_rate', 0) * 12 / max(context.key_metrics.get('revenue', 0) + 1, 1):.1f}x"
                 ),
                 "months_to_default": context.key_metrics.get('runway', 0),
                 "capital_efficiency": (
-                    f"${context.key_metrics.get('revenue', 0) / max(context.key_metrics.get('burn_rate', 1) * 12, 1):.2f} per $1 burned"
+                    f"${context.key_metrics.get('revenue', 0) / max(context.key_metrics.get('burn_rate', 100000) * 12, 1):.2f} per $1 burned"
                 )
             },
             "operational_position": {
                 "team_productivity": (
-                    f"${context.key_metrics.get('revenue', 0) / max(context.key_metrics.get('team_size', 1), 1):,.0f}/employee"
+                    f"${context.key_metrics.get('revenue', 0) / max(context.key_metrics.get('team_size', 10), 1):,.0f}/employee"
                 ),
                 "customer_efficiency": (
-                    f"${context.key_metrics.get('revenue', 0) / max(context.key_metrics.get('users', 1), 1):.0f}/user"
+                    f"${context.key_metrics.get('revenue', 0) / max(context.key_metrics.get('users', 100), 1):.0f}/user"
                 )
             }
         }
@@ -461,12 +461,14 @@ COMPETITIVE LANDSCAPE:
         
         # Efficiency gap
         current_ltv_cac = context.key_metrics.get('ltv_cac', 2)
+        if current_ltv_cac == 0:
+            current_ltv_cac = 0.1  # Avoid division by zero
         target_ltv_cac = context.industry_benchmarks.top_quartile_ltv_cac
         gaps["efficiency_gap"] = {
             "current": f"{current_ltv_cac:.1f}x",
             "target": f"{target_ltv_cac:.1f}x",
             "gap": f"{target_ltv_cac - current_ltv_cac:+.1f}x",
-            "improvement_required": f"{(target_ltv_cac/current_ltv_cac - 1)*100:+.0f}%"
+            "improvement_required": f"{(target_ltv_cac/max(current_ltv_cac, 0.1) - 1)*100:+.0f}%"
         }
         
         return gaps
