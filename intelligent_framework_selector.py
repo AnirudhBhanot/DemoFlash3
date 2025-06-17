@@ -167,6 +167,22 @@ class IntelligentFrameworkSelector:
                     "timeframe": 6
                 }
             ],
+            "seed_saas": [
+                {
+                    "context": {"stage": "seed", "industry": "saas_b2b", "challenge": "competition"},
+                    "frameworks": ["porters_five_forces", "blue_ocean_strategy", "bcg_matrix"],
+                    "outcome": "competitive_advantage",
+                    "timeframe": 9
+                }
+            ],
+            "series_a_saas": [
+                {
+                    "context": {"stage": "series_a", "industry": "saas_b2b", "challenge": "competition"},
+                    "frameworks": ["porters_five_forces", "bcg_matrix", "ansoff_matrix"],
+                    "outcome": "market_leadership",
+                    "timeframe": 12
+                }
+            ],
             "growth_marketplace": [
                 {
                     "context": {"stage": "growth", "industry": "marketplace", "challenge": "scaling"},
@@ -354,7 +370,10 @@ class IntelligentFrameworkSelector:
             "customer_acquisition": ["growth", "marketing", "customer", "acquisition"],
             "retention": ["retention", "churn", "engagement", "loyalty"],
             "unit_economics": ["economics", "ltv", "cac", "profitability"],
-            "competition": ["competitive", "differentiation", "positioning"],
+            "competition": ["competitive", "differentiation", "positioning", "rivalry", "forces"],
+            "intense_competition": ["competitive", "rivalry", "forces", "industry", "threat"],
+            "market_differentiation": ["differentiation", "unique", "positioning", "blue ocean"],
+            "competitive_positioning": ["positioning", "competitive", "forces", "industry"],
             "scaling": ["scale", "growth", "expansion", "operational"]
         }
         
@@ -365,6 +384,16 @@ class IntelligentFrameworkSelector:
                 if any(keyword in framework.description.lower() 
                        for keyword in keywords):
                     score += 10  # Up to 30 points for 3 challenges
+                    
+        # Special bonus for strategic frameworks
+        if framework.id == "porters_five_forces" and any(
+            "compet" in str(challenge).lower() or "market" in str(challenge).lower() 
+            for challenge in context.key_challenges
+        ):
+            score += 20  # Bonus for competitive analysis relevance
+            
+        if framework.id == "bcg_matrix" and context.stage in ["seed", "series_a", "growth"]:
+            score += 10  # Bonus for portfolio analysis at growth stages
                     
         return min(score, 100)
         

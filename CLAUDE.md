@@ -1,3 +1,51 @@
+# FLASH Platform - Context for Claude V27
+
+## Latest Updates (June 17, 2025 - V27)
+
+### Enhanced Michelin Analysis with McKinsey-Grade Output
+- **Issue**: User reported "phase 3 analysis aren't working" and frameworks had "very generalized output and not McKinsey or BCG grade specificities"
+- **Root Causes Identified**:
+  1. Phase 3 had no DeepSeek API calls - just returning static fallback
+  2. Frameworks used simplistic keyword matching instead of intelligent selection
+  3. No industry-specific customization of frameworks
+  4. Generic prompts without context carryover between phases
+  
+- **Solution Implemented**: Complete strategic analysis system
+  1. **Strategic Context Engine** (`strategic_context_engine.py`):
+     - Builds comprehensive company context with industry benchmarks
+     - Tracks strategic inflection points (Pre-PMF, PMF, Scaling, etc.)
+     - Identifies key challenges and opportunities
+  
+  2. **Intelligent Framework Selector** (`intelligent_framework_selector.py`):
+     - ML-based scoring with context embeddings
+     - Industry-specific framework variants (e.g., SaaS BCG uses NRR/ARR instead of market share)
+     - Success pattern matching from similar companies
+     - Synergy scoring for complementary frameworks
+  
+  3. **McKinsey-Grade Analyzer** (`mckinsey_grade_analyzer.py`):
+     - Generates partner-level strategic analysis
+     - Hypothesis trees and scenario planning
+     - Monte Carlo simulations for risk analysis
+     - Specific, actionable recommendations with metrics
+  
+  4. **Enhanced Phase 3** (`enhanced_phase3_analyzer.py`):
+     - Proper implementation with DeepSeek integration
+     - Risk assessment and mitigation strategies
+     - Implementation roadmap with milestones
+     - Success metrics and KPIs
+
+- **Framework Improvements**:
+  - Added BCG Matrix and Porter's Five Forces to framework database
+  - Industry variants: SaaS uses NRR/ARR, Marketplace uses Take Rate/GMV
+  - Fixed scoring to prioritize relevant frameworks (added competitive bonus)
+  - Pattern-based selection learning from successful companies
+  
+- **Testing Results**:
+  - Successfully tested with FLASH platform data
+  - BCG Matrix properly customized for each industry
+  - Porter's Five Forces now selected for competitive challenges
+  - Output includes specific metrics, benchmarks, and actionable insights
+
 # FLASH Platform - Context for Claude V26
 
 ## Project Overview
