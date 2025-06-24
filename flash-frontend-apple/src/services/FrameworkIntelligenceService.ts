@@ -194,9 +194,7 @@ export class FrameworkIntelligenceService {
       scores.set('competitive_analysis', (scores.get('competitive_analysis') || 0) + 10);
     }
 
-    // Always boost fundamental frameworks
-    scores.set('swot_analysis', (scores.get('swot_analysis') || 0) + 15);
-    scores.set('porters_five_forces', (scores.get('porters_five_forces') || 0) + 10);
+    // Removed automatic boost for specific frameworks - let them compete on merit
   }
 
   private applySynergyBonuses(scores: Map<string, number>): void {
@@ -241,21 +239,11 @@ export class FrameworkIntelligenceService {
     const selected: FrameworkRecommendation[] = [];
     const selectedFamilies = new Set<string>();
 
-    // Always include SWOT as baseline
-    selected.push({
-      frameworkId: 'swot_analysis',
-      frameworkName: 'SWOT Analysis',
-      relevanceScore: scores.get('swot_analysis') || 80,
-      reason: 'Fundamental assessment of internal and external factors',
-      category: 'internal-assessment',
-      synergyWith: this.frameworkSynergies['swot_analysis'] || []
-    });
-    selectedFamilies.add('internal-assessment');
+    // Remove automatic inclusion of SWOT - let all frameworks compete fairly
 
     // Select diverse frameworks
     for (const [framework, score] of sortedFrameworks) {
       if (selected.length >= maxFrameworks) break;
-      if (framework === 'swot_analysis') continue;
 
       const family = this.getFrameworkFamily(framework);
       

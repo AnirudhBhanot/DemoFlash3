@@ -16,7 +16,7 @@ from pydantic import BaseModel
 # Import enhanced components
 from strategic_context_engine import StrategicContextEngine
 from enhanced_framework_selector import EnhancedFrameworkSelector
-from mckinsey_grade_analyzer import McKinseyGradeAnalyzer
+from mckinsey_grade_analyzer import StrategicAnalysisEngine
 from enhanced_phase3_analyzer import EnhancedPhase3Analyzer
 
 # Import existing models
@@ -48,7 +48,7 @@ class EnhancedMichelinEngine:
     def __init__(self):
         self.context_engine = StrategicContextEngine()
         self.framework_selector = EnhancedFrameworkSelector()
-        self.mckinsey_analyzer = McKinseyGradeAnalyzer()
+        self.mckinsey_analyzer = StrategicAnalysisEngine()
         self.phase3_analyzer = EnhancedPhase3Analyzer()
         
     async def analyze_phase1(self, startup_data: StartupData) -> Dict[str, Any]:
@@ -128,6 +128,11 @@ class EnhancedMichelinEngine:
         # Generate context-aware SWOT
         swot_analysis = await self._generate_enhanced_swot(context)
         
+        # Generate framework interconnection analysis
+        interconnection_analysis = await self._generate_framework_interconnections(
+            phase1_frameworks, context
+        )
+        
         # Generate strategic narrative
         executive_summary = await self._generate_executive_summary(
             context, bcg_analysis, porters_analysis, swot_analysis
@@ -143,6 +148,8 @@ class EnhancedMichelinEngine:
             "porters_five_forces": porters_analysis,
             "swot_analysis": swot_analysis,
             "current_position_narrative": position_narrative,
+            "framework_interconnections": interconnection_analysis,
+            "frameworks_selected": [f.base_framework.name for f in phase1_frameworks],
             "context": {
                 "industry_benchmarks": {
                     "top_quartile_growth": context.industry_benchmarks.top_quartile_growth,
@@ -163,15 +170,44 @@ class EnhancedMichelinEngine:
         
         logger.info(f"Starting enhanced Phase 2 analysis for {startup_data.startup_name}")
         
-        # Rebuild context with Phase 1 insights
-        context = await self.context_engine.build_company_context(
-            startup_data.model_dump()
-        )
+        try:
+            # Rebuild context with Phase 1 insights
+            context = await self.context_engine.build_company_context(
+                startup_data.model_dump()
+            )
+        except Exception as e:
+            logger.error(f"Error building context in Phase 2: {e}")
+            raise
         
         # Select growth frameworks
-        growth_frameworks = await self.framework_selector.select_frameworks(
-            context, max_frameworks=4
+        # Convert context to startup data format for framework selector
+        startup_data_for_frameworks = {
+            "startup_name": context.company_name,
+            "sector": context.industry,
+            "stage": context.stage,
+            "revenue": context.key_metrics.get("revenue", 0),
+            "growth_rate": context.key_metrics.get("growth_rate", 0),
+            "burn_rate": context.key_metrics.get("burn_rate", 0),
+            "ltv_cac_ratio": context.key_metrics.get("ltv_cac", 0),
+            "net_revenue_retention": context.key_metrics.get("nrr", 100),
+            "team_size": context.key_metrics.get("team_size", 10),
+            "runway_months": context.key_metrics.get("runway", 12),
+            "key_challenges": context.key_challenges,
+            "customer_count": context.key_metrics.get("customer_count", 0),
+            "market_share": context.key_metrics.get("market_share", 0)
+        }
+        
+        # Select frameworks using the correct method
+        result = await self.framework_selector.select_frameworks_for_startup(
+            startup_data_for_frameworks, max_frameworks=4
         )
+        
+        if not result["success"]:
+            logger.warning(f"Framework selection failed: {result.get('error')}")
+            # Use fallback frameworks
+            growth_frameworks = result.get("fallback", [])
+        else:
+            growth_frameworks = self._convert_enhanced_frameworks(result["frameworks"])
         
         # Generate Ansoff Matrix analysis
         ansoff_analysis = await self._generate_ansoff_analysis(context, phase1_data)
@@ -181,6 +217,11 @@ class EnhancedMichelinEngine:
         
         # Generate growth scenarios with Monte Carlo
         growth_scenarios = await self._generate_growth_scenarios(context, ansoff_analysis)
+        
+        # Generate ML/AI augmentation opportunities
+        ml_ai_opportunities = await self._generate_ml_ai_opportunities(
+            context, growth_frameworks, phase1_data
+        )
         
         # Strategic recommendation synthesis
         recommended_direction = await self._synthesize_strategic_direction(
@@ -194,6 +235,7 @@ class EnhancedMichelinEngine:
             "ansoff_matrix_analysis": ansoff_analysis,
             "blue_ocean_strategy": blue_ocean_analysis,
             "growth_scenarios": growth_scenarios,
+            "ml_ai_opportunities": ml_ai_opportunities,
             "recommended_direction": recommended_direction
         }
         
@@ -1070,6 +1112,384 @@ Be specific and actionable.
                 converted.append(customized)
         
         return converted
+    
+    async def _generate_framework_interconnections(
+        self,
+        frameworks: List[Any],
+        context: Any
+    ) -> Dict[str, Any]:
+        """Generate framework interconnection analysis with PhD enhancements"""
+        
+        interconnections = {
+            "selected_frameworks": [],
+            "synergies": [],
+            "prerequisite_chain": [],
+            "implementation_sequence": [],
+            "potential_conflicts": [],
+            "academic_foundations": []
+        }
+        
+        # Process each framework
+        for i, framework in enumerate(frameworks):
+            fw_id = framework.base_framework.id
+            fw_name = framework.base_framework.name
+            
+            # Add framework details with PhD enhancements
+            fw_details = {
+                "id": fw_id,
+                "name": fw_name,
+                "purpose": framework.base_framework.description[:100] + "...",
+                "position": i + 1
+            }
+            
+            # Add PhD enhancement info if available
+            if hasattr(framework, 'phd_enhancement') and framework.phd_enhancement:
+                phd = framework.phd_enhancement
+                fw_details["theoretical_foundation"] = phd.get('theoretical_foundation', {}).get('primary_theory', '')
+                fw_details["academic_validation"] = phd.get('academic_rigor', {}).get('peer_reviewed_basis', False)
+                fw_details["ml_augmentation"] = phd.get('advanced_applications', {}).get('machine_learning_integration', '')
+                fw_details["time_to_mastery"] = phd.get('implementation_sophistication', {}).get('time_to_mastery', '2-4 weeks')
+            
+            interconnections["selected_frameworks"].append(fw_details)
+            
+            # Identify synergies between frameworks
+            if hasattr(framework, 'synergistic_frameworks'):
+                for other_fw in frameworks:
+                    if other_fw.base_framework.id in framework.synergistic_frameworks:
+                        synergy = {
+                            "framework1": fw_name,
+                            "framework2": other_fw.base_framework.name,
+                            "synergy_type": "complementary",
+                            "benefit": f"{fw_name} insights feed into {other_fw.base_framework.name}",
+                            "integration_point": self._get_integration_point(fw_id, other_fw.base_framework.id)
+                        }
+                        
+                        # Add synergy score if available
+                        if hasattr(framework, 'customizations') and 'synergy_scores' in framework.customizations:
+                            score = framework.customizations['synergy_scores'].get(other_fw.base_framework.id, 0)
+                            synergy["synergy_score"] = score
+                        
+                        interconnections["synergies"].append(synergy)
+        
+        # Build prerequisite chain
+        prerequisites_met = set()
+        for framework in frameworks:
+            if hasattr(framework, 'prerequisites'):
+                for prereq in framework.prerequisites:
+                    if prereq not in prerequisites_met:
+                        interconnections["prerequisite_chain"].append({
+                            "requirement": prereq,
+                            "needed_for": framework.base_framework.name,
+                            "status": "to_be_developed"
+                        })
+            prerequisites_met.add(framework.base_framework.id)
+        
+        # Define implementation sequence based on stage and dependencies
+        if context.current_inflection.value == "pre_product_market_fit":
+            sequence = [
+                {"phase": "Discovery", "frameworks": ["jobs_to_be_done", "customer_development"], "duration": "2-4 weeks"},
+                {"phase": "Validation", "frameworks": ["lean_canvas", "mvp_framework"], "duration": "4-6 weeks"},
+                {"phase": "Strategy", "frameworks": ["bcg_matrix", "porters_five_forces"], "duration": "2-3 weeks"}
+            ]
+        else:
+            sequence = [
+                {"phase": "Analysis", "frameworks": ["bcg_matrix", "porters_five_forces"], "duration": "1-2 weeks"},
+                {"phase": "Strategy", "frameworks": ["ansoff_matrix", "blue_ocean_strategy"], "duration": "2-3 weeks"},
+                {"phase": "Execution", "frameworks": ["okr_framework", "balanced_scorecard"], "duration": "ongoing"}
+            ]
+        
+        interconnections["implementation_sequence"] = sequence
+        
+        # Identify potential conflicts
+        for framework in frameworks:
+            if hasattr(framework, 'conflicts'):
+                for conflict in framework.conflicts:
+                    interconnections["potential_conflicts"].append({
+                        "framework": framework.base_framework.name,
+                        "conflicts_with": conflict,
+                        "resolution": "Choose one approach or apply in different contexts"
+                    })
+        
+        # Extract academic foundations
+        for framework in frameworks:
+            if hasattr(framework, 'phd_enhancement') and framework.phd_enhancement:
+                foundation = framework.phd_enhancement.get('theoretical_foundation', {})
+                if foundation.get('primary_theory'):
+                    interconnections["academic_foundations"].append({
+                        "framework": framework.base_framework.name,
+                        "theory": foundation.get('primary_theory'),
+                        "supporting_theories": foundation.get('supporting_theories', []),
+                        "key_citations": framework.phd_enhancement.get('academic_rigor', {}).get('key_citations', [])
+                    })
+        
+        return interconnections
+    
+    def _get_integration_point(self, fw1_id: str, fw2_id: str) -> str:
+        """Get specific integration point between two frameworks"""
+        
+        integration_map = {
+            ("bcg_matrix", "ansoff_matrix"): "BCG position determines Ansoff growth strategy",
+            ("bcg_matrix", "resource_allocation"): "BCG quadrant drives resource allocation priorities",
+            ("porters_five_forces", "blue_ocean_strategy"): "Five Forces analysis reveals blue ocean opportunities",
+            ("jobs_to_be_done", "value_proposition_canvas"): "Jobs insights shape value proposition design",
+            ("unit_economics", "pricing_strategy"): "Unit economics inform optimal pricing models",
+            ("customer_journey", "retention_framework"): "Journey analysis identifies retention levers"
+        }
+        
+        # Check both directions
+        key1 = (fw1_id, fw2_id)
+        key2 = (fw2_id, fw1_id)
+        
+        if key1 in integration_map:
+            return integration_map[key1]
+        elif key2 in integration_map:
+            return integration_map[key2]
+        else:
+            return f"Outputs from {fw1_id} inform {fw2_id} implementation"
+    
+    async def _generate_ml_ai_opportunities(
+        self,
+        context: Any,
+        frameworks: List[Any],
+        phase1_data: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """Generate ML/AI augmentation opportunities based on context and frameworks"""
+        
+        opportunities = {
+            "overview": "",
+            "immediate_applications": [],
+            "advanced_applications": [],
+            "data_requirements": {},
+            "expected_impact": {},
+            "implementation_roadmap": []
+        }
+        
+        # Assess data readiness
+        customer_count = context.key_metrics.get('customer_count', 0)
+        revenue = context.key_metrics.get('revenue', 0)
+        has_data_infrastructure = customer_count > 1000 or revenue > 1000000
+        
+        # Set overview based on readiness
+        if has_data_infrastructure:
+            opportunities["overview"] = (
+                f"With {customer_count:,} customers and ${revenue:,.0f} in revenue, "
+                f"{context.company_name} has sufficient data for ML/AI implementation"
+            )
+        else:
+            opportunities["overview"] = (
+                f"Focus on building data infrastructure first. "
+                f"Current scale ({customer_count} customers) limits advanced ML applications"
+            )
+        
+        # Extract ML/AI opportunities from framework PhD enhancements
+        for framework in frameworks:
+            if hasattr(framework, 'phd_enhancement') and framework.phd_enhancement:
+                ml_app = framework.phd_enhancement.get('advanced_applications', {}).get(
+                    'machine_learning_integration', ''
+                )
+                if ml_app:
+                    opportunities["immediate_applications"].append({
+                        "framework": framework.base_framework.name,
+                        "application": ml_app,
+                        "complexity": "Medium",
+                        "timeline": "2-3 months"
+                    })
+        
+        # Add context-specific ML opportunities
+        if context.industry == "saas_b2b":
+            opportunities["immediate_applications"].extend([
+                {
+                    "application": "Churn prediction model",
+                    "description": "Predict customer churn 30-60 days in advance",
+                    "data_needed": "Usage data, engagement metrics, support tickets",
+                    "expected_accuracy": "75-85%",
+                    "business_impact": "Reduce churn by 15-20%"
+                },
+                {
+                    "application": "Lead scoring automation",
+                    "description": "Score leads based on conversion probability",
+                    "data_needed": "CRM data, website behavior, firmographics",
+                    "expected_accuracy": "70-80%",
+                    "business_impact": "Increase sales efficiency by 30%"
+                }
+            ])
+            
+            if customer_count > 5000:
+                opportunities["advanced_applications"].extend([
+                    {
+                        "application": "Pricing optimization engine",
+                        "description": "Dynamic pricing based on customer segments",
+                        "complexity": "High",
+                        "timeline": "4-6 months",
+                        "expected_roi": "10-15% revenue increase"
+                    },
+                    {
+                        "application": "Product recommendation system",
+                        "description": "AI-powered feature/upsell recommendations",
+                        "complexity": "High",
+                        "timeline": "3-4 months",
+                        "expected_roi": "20-30% upsell rate increase"
+                    }
+                ])
+        
+        elif context.industry == "marketplace":
+            opportunities["immediate_applications"].extend([
+                {
+                    "application": "Supply-demand matching algorithm",
+                    "description": "Optimize marketplace liquidity",
+                    "data_needed": "Transaction history, search data, user preferences",
+                    "expected_accuracy": "80-90%",
+                    "business_impact": "Increase match rate by 25%"
+                },
+                {
+                    "application": "Fraud detection system",
+                    "description": "Real-time transaction fraud detection",
+                    "data_needed": "Transaction patterns, user behavior, device data",
+                    "expected_accuracy": "95%+",
+                    "business_impact": "Reduce fraud losses by 80%"
+                }
+            ])
+        
+        # Define data requirements
+        opportunities["data_requirements"] = {
+            "minimum_data_points": "10,000+ customer interactions",
+            "data_types_needed": [
+                "Behavioral data (clicks, views, actions)",
+                "Transactional data (purchases, revenue)",
+                "Engagement data (time spent, frequency)",
+                "Demographic data (if B2C) or Firmographic (if B2B)"
+            ],
+            "infrastructure_needed": [
+                "Data warehouse or lake",
+                "ETL pipelines",
+                "ML platform (cloud or on-premise)",
+                "Monitoring and feedback loops"
+            ],
+            "current_readiness": self._assess_ml_readiness(context)
+        }
+        
+        # Define expected impact
+        opportunities["expected_impact"] = {
+            "revenue_impact": "10-25% increase through optimization",
+            "cost_savings": "15-30% through automation",
+            "efficiency_gains": "2-3x improvement in key processes",
+            "competitive_advantage": "6-12 month head start on competitors"
+        }
+        
+        # Create implementation roadmap
+        opportunities["implementation_roadmap"] = [
+            {
+                "phase": "Foundation (Months 1-2)",
+                "activities": [
+                    "Set up data infrastructure",
+                    "Implement tracking and collection",
+                    "Build initial data models",
+                    "Hire/train ML talent"
+                ]
+            },
+            {
+                "phase": "Quick Wins (Months 2-4)",
+                "activities": [
+                    "Deploy first ML model (churn/lead scoring)",
+                    "A/B test and validate results",
+                    "Build confidence in ML approach",
+                    "Expand data collection"
+                ]
+            },
+            {
+                "phase": "Scale (Months 4-6)",
+                "activities": [
+                    "Deploy 2-3 additional models",
+                    "Integrate ML into core product",
+                    "Build real-time capabilities",
+                    "Measure and optimize ROI"
+                ]
+            },
+            {
+                "phase": "Advanced (Months 6+)",
+                "activities": [
+                    "Deep learning applications",
+                    "Automated decision systems",
+                    "Predictive analytics platform",
+                    "AI-first product features"
+                ]
+            }
+        ]
+        
+        return opportunities
+    
+    def _assess_ml_readiness(self, context: Any) -> Dict[str, Any]:
+        """Assess company's readiness for ML implementation"""
+        
+        readiness_score = 0
+        factors = []
+        
+        # Data volume
+        if context.key_metrics.get('customer_count', 0) > 10000:
+            readiness_score += 25
+            factors.append("Sufficient data volume")
+        elif context.key_metrics.get('customer_count', 0) > 1000:
+            readiness_score += 15
+            factors.append("Adequate data volume")
+        else:
+            factors.append("Limited data volume")
+        
+        # Technical team
+        if context.key_metrics.get('team_size', 0) > 50:
+            readiness_score += 25
+            factors.append("Likely has technical talent")
+        elif context.key_metrics.get('team_size', 0) > 20:
+            readiness_score += 15
+            factors.append("Growing technical team")
+        
+        # Funding stage
+        if context.stage in ['series_a', 'series_b', 'series_c']:
+            readiness_score += 25
+            factors.append("Funded for ML investment")
+        elif context.stage == 'seed':
+            readiness_score += 10
+            factors.append("Early for ML but possible")
+        
+        # Industry fit
+        if context.industry in ['saas_b2b', 'fintech', 'marketplace']:
+            readiness_score += 25
+            factors.append("High ML potential industry")
+        
+        return {
+            "readiness_score": f"{readiness_score}%",
+            "readiness_level": (
+                "High" if readiness_score > 75 
+                else "Medium" if readiness_score > 50 
+                else "Low"
+            ),
+            "key_factors": factors,
+            "next_steps": self._get_ml_next_steps(readiness_score, context)
+        }
+    
+    def _get_ml_next_steps(self, readiness_score: int, context: Any) -> List[str]:
+        """Get next steps based on ML readiness"""
+        
+        if readiness_score > 75:
+            return [
+                "Start with high-impact use case (churn/lead scoring)",
+                "Build or hire ML team",
+                "Implement ML infrastructure",
+                "Run pilot project in 30 days"
+            ]
+        elif readiness_score > 50:
+            return [
+                "Focus on data collection and quality",
+                "Identify specific ML use cases",
+                "Consider ML partnerships or consultants",
+                "Build POC with existing data"
+            ]
+        else:
+            return [
+                "Prioritize core product and growth first",
+                "Implement basic analytics",
+                "Collect and organize data for future ML",
+                "Revisit ML in 6-12 months"
+            ]
 
 
 # Initialize engine
@@ -1133,7 +1553,9 @@ async def analyze_phase2_enhanced(
         )
         
     except Exception as e:
+        import traceback
         logger.error(f"Enhanced Phase 2 failed: {e}")
+        logger.error(f"Traceback: {traceback.format_exc()}")
         raise HTTPException(
             status_code=500,
             detail=f"Analysis failed: {str(e)}"

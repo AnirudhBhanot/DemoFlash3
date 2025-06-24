@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Enhanced Phase 3 Analyzer - McKinsey-grade implementation planning
+Enhanced Phase 3 Analyzer - Strategic implementation planning with research-backed methods
 """
 
 import logging
@@ -9,16 +9,16 @@ from datetime import datetime, timedelta
 import asyncio
 
 from strategic_context_engine import CompanyContext, StrategicInflection
-from mckinsey_grade_analyzer import McKinseyGradeAnalyzer
+from mckinsey_grade_analyzer import StrategicAnalysisEngine
 
 logger = logging.getLogger(__name__)
 
 
 class EnhancedPhase3Analyzer:
-    """Generate McKinsey-grade Phase 3 implementation analysis"""
+    """Generate comprehensive Phase 3 implementation analysis using context-appropriate methods"""
     
     def __init__(self):
-        self.mckinsey_analyzer = McKinseyGradeAnalyzer()
+        self.strategic_analyzer = StrategicAnalysisEngine()
         
     async def analyze_phase3(
         self,
@@ -41,7 +41,9 @@ class EnhancedPhase3Analyzer:
             self._create_okr_framework(context, strategic_context),
             self._create_resource_plan(context, strategic_context),
             self._create_risk_mitigation_plan(context, strategic_context),
-            self._create_success_metrics(context, strategic_context)
+            self._create_success_metrics(context, strategic_context),
+            self._create_academic_validation_plan(context, strategic_context),
+            self._create_research_measurement_framework(context, strategic_context)
         ]
         
         results = await asyncio.gather(*tasks)
@@ -53,7 +55,9 @@ class EnhancedPhase3Analyzer:
             "okr_framework": results[2],
             "resource_requirements": results[3],
             "risk_mitigation_plan": results[4],
-            "success_metrics": results[5]
+            "success_metrics": results[5],
+            "academic_validation_plan": results[6],
+            "research_measurement_framework": results[7]
         }
         
         # Add executive summary
@@ -89,7 +93,7 @@ class EnhancedPhase3Analyzer:
         """Create detailed implementation roadmap"""
         
         prompt = f"""
-Create a McKinsey-quality 90-day implementation roadmap for {context.company_name}:
+Create a comprehensive 90-day implementation roadmap for {context.company_name} using context-appropriate methods:
 
 STRATEGIC CONTEXT:
 - Current Position: {strategic_context['current_position']}
@@ -114,7 +118,7 @@ Focus on {context.industry}-specific actions that address their primary challeng
 {context.primary_strategic_question}
 """
         
-        roadmap = await self.mckinsey_analyzer._call_deepseek(prompt, max_tokens=800)
+        roadmap = await self.strategic_analyzer._call_deepseek(prompt, max_tokens=800)
         
         # Ensure we have substantive content
         if len(roadmap) < 200:
@@ -860,3 +864,334 @@ Success will be measured by achieving {phase3_data['success_metrics'][0]['target
     async def close(self):
         """Close resources"""
         await self.mckinsey_analyzer.close()
+    
+    async def _create_academic_validation_plan(
+        self,
+        context: CompanyContext,
+        strategic_context: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """Create academic validation plan with research-based methods"""
+        
+        validation_plan = {
+            "validation_methodology": self._determine_validation_methodology(context),
+            "research_design": self._create_research_design(context, strategic_context),
+            "data_collection_plan": self._create_data_collection_plan(context),
+            "statistical_analysis_plan": self._create_statistical_analysis_plan(context),
+            "validity_threats": self._identify_validity_threats(context),
+            "ethical_considerations": self._identify_ethical_considerations(context)
+        }
+        
+        return validation_plan
+    
+    def _determine_validation_methodology(self, context: CompanyContext) -> Dict[str, Any]:
+        """Determine appropriate validation methodology"""
+        
+        customer_count = context.key_metrics.get('customer_count', 0)
+        
+        if customer_count > 10000:
+            return {
+                "primary_method": "Randomized Controlled Trial (RCT)",
+                "rationale": "Sufficient sample size for statistical power",
+                "design": "A/B testing with control group",
+                "timeline": "30-60 days per experiment",
+                "statistical_power": "95% confidence, 80% power"
+            }
+        elif customer_count > 1000:
+            return {
+                "primary_method": "Quasi-experimental design",
+                "rationale": "Moderate sample size, ethical constraints",
+                "design": "Before-after with matched control",
+                "timeline": "60-90 days",
+                "statistical_power": "90% confidence, 70% power"
+            }
+        else:
+            return {
+                "primary_method": "Case study methodology",
+                "rationale": "Limited sample size, deep insights needed",
+                "design": "Multiple case studies with pattern matching",
+                "timeline": "90-120 days",
+                "validity": "Triangulation and member checking"
+            }
+    
+    def _create_research_design(
+        self,
+        context: CompanyContext,
+        strategic_context: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """Create detailed research design"""
+        
+        return {
+            "research_questions": [
+                f"Does {strategic_context['chosen_strategy']} improve key metrics by >20%?",
+                "What are the causal mechanisms driving improvement?",
+                "How do results vary across customer segments?",
+                "What are the unintended consequences?"
+            ],
+            "hypotheses": [
+                {
+                    "h1": f"{strategic_context['chosen_strategy']} increases revenue by 25%",
+                    "h0": "No significant difference in revenue",
+                    "test": "Two-tailed t-test or Mann-Whitney U"
+                },
+                {
+                    "h1": "Implementation improves NPS by 10 points",
+                    "h0": "No change in customer satisfaction",
+                    "test": "Paired t-test or Wilcoxon signed-rank"
+                }
+            ],
+            "variables": {
+                "independent": strategic_context['chosen_strategy'],
+                "dependent": ["Revenue", "NPS", "Retention", "LTV/CAC"],
+                "control": ["Seasonality", "Market conditions", "Competition"],
+                "moderating": ["Customer segment", "Product usage", "Tenure"]
+            },
+            "sampling_strategy": self._determine_sampling_strategy(context)
+        }
+    
+    def _create_data_collection_plan(self, context: CompanyContext) -> Dict[str, Any]:
+        """Create comprehensive data collection plan"""
+        
+        return {
+            "quantitative_data": {
+                "sources": [
+                    "Product analytics (Amplitude/Mixpanel)",
+                    "Financial systems (Revenue, costs)",
+                    "CRM (Customer data)",
+                    "Support tickets (Quality issues)"
+                ],
+                "frequency": "Daily collection, weekly analysis",
+                "storage": "Data warehouse with version control",
+                "quality_checks": [
+                    "Completeness (>95%)",
+                    "Accuracy validation",
+                    "Outlier detection",
+                    "Consistency checks"
+                ]
+            },
+            "qualitative_data": {
+                "methods": [
+                    "Customer interviews (n=20-30)",
+                    "Employee surveys",
+                    "Observation studies",
+                    "Document analysis"
+                ],
+                "protocols": "Semi-structured interview guides",
+                "analysis": "Thematic analysis with NVivo",
+                "validation": "Inter-rater reliability >0.8"
+            },
+            "timeline": {
+                "baseline": "2 weeks before implementation",
+                "during": "Continuous monitoring",
+                "post": "90 days after implementation",
+                "follow_up": "6 months for long-term effects"
+            }
+        }
+    
+    def _create_statistical_analysis_plan(self, context: CompanyContext) -> Dict[str, Any]:
+        """Create statistical analysis plan"""
+        
+        return {
+            "descriptive_statistics": [
+                "Central tendency (mean, median, mode)",
+                "Dispersion (SD, IQR, range)",
+                "Distribution shape (skewness, kurtosis)"
+            ],
+            "inferential_statistics": {
+                "primary_analysis": self._determine_primary_analysis(context),
+                "secondary_analyses": [
+                    "Subgroup analysis by segment",
+                    "Sensitivity analysis",
+                    "Mediation analysis for mechanisms"
+                ],
+                "effect_size": "Cohen's d or Hedges' g",
+                "multiple_comparisons": "Bonferroni correction"
+            },
+            "advanced_techniques": self._determine_advanced_techniques(context),
+            "software": ["R (lme4, tidyverse)", "Python (statsmodels, scipy)", "SPSS for validation"]
+        }
+    
+    def _identify_validity_threats(self, context: CompanyContext) -> List[Dict[str, Any]]:
+        """Identify threats to validity"""
+        
+        return [
+            {
+                "type": "Internal validity",
+                "threat": "Selection bias",
+                "mitigation": "Random assignment or propensity score matching"
+            },
+            {
+                "type": "External validity",
+                "threat": "Limited generalizability",
+                "mitigation": "Diverse customer sampling, replication studies"
+            },
+            {
+                "type": "Construct validity",
+                "threat": "Measurement error",
+                "mitigation": "Multiple measures, validated instruments"
+            },
+            {
+                "type": "Statistical conclusion",
+                "threat": "Low power",
+                "mitigation": "Power analysis, adequate sample size"
+            }
+        ]
+    
+    def _identify_ethical_considerations(self, context: CompanyContext) -> Dict[str, Any]:
+        """Identify ethical considerations"""
+        
+        return {
+            "customer_impact": {
+                "risks": ["Service disruption", "Privacy concerns", "Unfair treatment"],
+                "mitigations": ["Opt-in consent", "Data anonymization", "Equal access"]
+            },
+            "data_governance": {
+                "compliance": ["GDPR", "CCPA", "Industry regulations"],
+                "security": "Encryption at rest and in transit",
+                "retention": "Delete after analysis complete"
+            },
+            "transparency": {
+                "stakeholder_communication": "Regular updates on findings",
+                "publication": "Share results with academic community",
+                "limitations": "Clearly state study limitations"
+            }
+        }
+    
+    async def _create_research_measurement_framework(
+        self,
+        context: CompanyContext,
+        strategic_context: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """Create research-based measurement framework"""
+        
+        return {
+            "measurement_principles": {
+                "reliability": "Cronbach's alpha > 0.7 for all scales",
+                "validity": "Content, construct, and criterion validity",
+                "sensitivity": "Ability to detect 10% changes",
+                "practicality": "Automated data collection where possible"
+            },
+            "key_constructs": self._identify_key_constructs(strategic_context),
+            "measurement_instruments": self._select_measurement_instruments(context),
+            "data_quality_framework": {
+                "accuracy": "Source data validation",
+                "completeness": ">95% data capture",
+                "consistency": "Cross-system reconciliation",
+                "timeliness": "Real-time or daily updates"
+            },
+            "analysis_cadence": {
+                "real_time": ["Revenue", "Usage", "Errors"],
+                "daily": ["Acquisition", "Activation", "Engagement"],
+                "weekly": ["Retention", "NPS", "Support"],
+                "monthly": ["LTV", "CAC", "Churn", "Financial"],
+                "quarterly": ["Market share", "Competitive position"]
+            },
+            "reporting_framework": {
+                "dashboards": "Real-time KPI monitoring",
+                "reports": "Weekly progress, monthly deep dive",
+                "alerts": "Automated anomaly detection",
+                "reviews": "Quarterly board reporting"
+            }
+        }
+    
+    def _determine_sampling_strategy(self, context: CompanyContext) -> Dict[str, Any]:
+        """Determine appropriate sampling strategy"""
+        
+        customer_count = context.key_metrics.get('customer_count', 0)
+        
+        if customer_count > 10000:
+            return {
+                "method": "Stratified random sampling",
+                "strata": ["Customer segment", "Tenure", "Usage level"],
+                "size": "n = 385 for 95% confidence, 5% margin"
+            }
+        else:
+            return {
+                "method": "Purposive sampling",
+                "criteria": ["Representative of key segments", "Willing to participate"],
+                "size": f"n = {min(customer_count // 10, 100)} (10% of population)"
+            }
+    
+    def _determine_primary_analysis(self, context: CompanyContext) -> str:
+        """Determine primary statistical analysis"""
+        
+        if context.key_metrics.get('customer_count', 0) > 5000:
+            return "Mixed-effects regression with random intercepts"
+        elif context.key_metrics.get('customer_count', 0) > 1000:
+            return "ANCOVA with pre-test scores as covariate"
+        else:
+            return "Non-parametric tests (Mann-Whitney, Wilcoxon)"
+    
+    def _determine_advanced_techniques(self, context: CompanyContext) -> List[str]:
+        """Determine advanced analytical techniques"""
+        
+        techniques = []
+        
+        if context.key_metrics.get('customer_count', 0) > 10000:
+            techniques.extend([
+                "Machine learning for heterogeneous treatment effects",
+                "Causal forests for subgroup identification",
+                "Structural equation modeling for mechanisms"
+            ])
+        
+        if context.industry in ['saas_b2b', 'fintech']:
+            techniques.append("Survival analysis for churn prediction")
+        
+        techniques.append("Bayesian analysis for uncertainty quantification")
+        
+        return techniques
+    
+    def _identify_key_constructs(self, strategic_context: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Identify key constructs to measure"""
+        
+        return [
+            {
+                "construct": "Strategic Success",
+                "definition": f"Achievement of {strategic_context['chosen_strategy']} objectives",
+                "indicators": ["Revenue growth", "Market share", "Customer acquisition"]
+            },
+            {
+                "construct": "Customer Value",
+                "definition": "Perceived value delivered to customers",
+                "indicators": ["NPS", "CSAT", "Retention", "Upsell rate"]
+            },
+            {
+                "construct": "Operational Efficiency",
+                "definition": "Resource utilization effectiveness",
+                "indicators": ["Burn multiple", "CAC payback", "Gross margin"]
+            },
+            {
+                "construct": "Organizational Capability",
+                "definition": "Ability to execute strategy",
+                "indicators": ["Employee engagement", "Skill coverage", "Process maturity"]
+            }
+        ]
+    
+    def _select_measurement_instruments(self, context: CompanyContext) -> List[Dict[str, Any]]:
+        """Select appropriate measurement instruments"""
+        
+        return [
+            {
+                "construct": "Customer Satisfaction",
+                "instrument": "Net Promoter Score (NPS)",
+                "rationale": "Industry standard, predictive of growth",
+                "frequency": "Monthly"
+            },
+            {
+                "construct": "Product-Market Fit",
+                "instrument": "Sean Ellis PMF Survey",
+                "rationale": "Validated measure of PMF",
+                "frequency": "Quarterly"
+            },
+            {
+                "construct": "Employee Engagement",
+                "instrument": "Gallup Q12",
+                "rationale": "Proven link to performance",
+                "frequency": "Quarterly"
+            },
+            {
+                "construct": "Financial Performance",
+                "instrument": "SaaS metrics dashboard",
+                "rationale": "Real-time tracking of key metrics",
+                "frequency": "Daily/Weekly"
+            }
+        ]

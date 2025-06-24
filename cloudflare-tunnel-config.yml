@@ -1,0 +1,18 @@
+tunnel: flash-app
+credentials-file: /Users/sf/.cloudflared/[TUNNEL-ID].json
+
+ingress:
+  # Backend API
+  - hostname: api.yourdomain.com
+    service: http://localhost:8001
+  
+  # Frontend
+  - hostname: app.yourdomain.com
+    service: http://localhost:3000
+    
+  # Main domain redirects to app
+  - hostname: yourdomain.com
+    service: http://localhost:3000
+    
+  # Catch-all
+  - service: http_status:404

@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """
 Intelligent Framework Selector - ML-based framework selection with context awareness
+Enhanced with PhD-level framework intelligence and academic rigor
 """
 
 import json
 import logging
 import numpy as np
-from typing import List, Dict, Optional, Tuple, Any
-from dataclasses import dataclass
+from typing import List, Dict, Optional, Tuple, Any, Set
+from dataclasses import dataclass, field
 from datetime import datetime
 import pickle
 import os
@@ -123,6 +124,11 @@ class CustomizedFramework:
     thresholds: Dict[str, float]
     implementation_guide: Dict[str, Any]
     expected_insights: List[str]
+    phd_enhancement: Optional[Dict[str, Any]] = None
+    synergistic_frameworks: List[str] = field(default_factory=list)
+    prerequisites: List[str] = field(default_factory=list)
+    conflicts: List[str] = field(default_factory=list)
+    time_to_mastery: str = "2-4 weeks"
 
 
 @dataclass
@@ -134,7 +140,9 @@ class FrameworkScore:
     pattern_score: float
     synergy_score: float
     complexity_fit: float
-    rationale: List[str]
+    academic_rigor_score: float = 0.0
+    prerequisite_score: float = 100.0
+    rationale: List[str] = field(default_factory=list)
 
 
 class IntelligentFrameworkSelector:
@@ -144,6 +152,9 @@ class IntelligentFrameworkSelector:
         self.embeddings_model = self._initialize_embeddings_model()
         self.pattern_matcher = self._initialize_pattern_matcher()
         self.success_patterns = self._load_success_patterns()
+        self.phd_enhancements = self._load_phd_enhancements()
+        self.framework_synergies = self._load_framework_synergies()
+        self.framework_prerequisites = self._load_framework_prerequisites()
         
     def _initialize_embeddings_model(self):
         """Initialize embeddings model for semantic matching"""
@@ -192,6 +203,53 @@ class IntelligentFrameworkSelector:
                 }
             ]
         }
+    
+    def _load_phd_enhancements(self) -> Dict[str, Dict[str, Any]]:
+        """Load PhD-level framework enhancements"""
+        try:
+            phd_path = os.path.join(os.path.dirname(__file__), 'phd_enhancement_database.json')
+            with open(phd_path, 'r') as f:
+                return json.load(f)
+        except FileNotFoundError:
+            logger.warning("PhD enhancement database not found")
+            return {}
+        except Exception as e:
+            logger.error(f"Error loading PhD enhancements: {e}")
+            return {}
+    
+    def _load_framework_synergies(self) -> Dict[str, Any]:
+        """Load framework synergy data"""
+        try:
+            synergy_path = os.path.join(os.path.dirname(__file__), 'framework_synergies.json')
+            with open(synergy_path, 'r') as f:
+                return json.load(f)
+        except FileNotFoundError:
+            logger.warning("Framework synergies data not found")
+            return {"complementary_frameworks": {}, "synergy_scores": {}}
+        except Exception as e:
+            logger.error(f"Error loading framework synergies: {e}")
+            return {"complementary_frameworks": {}, "synergy_scores": {}}
+    
+    def _load_framework_prerequisites(self) -> Dict[str, Set[str]]:
+        """Load framework prerequisite relationships"""
+        # Extract from PhD enhancements
+        prerequisites = {}
+        for framework_id, enhancement in self.phd_enhancements.items():
+            if 'phd_level_features' in enhancement:
+                prereqs = enhancement['phd_level_features'].get(
+                    'interconnection_intelligence', {}
+                ).get('prerequisite_knowledge', [])
+                prerequisites[framework_id] = set(prereqs)
+        
+        # Add from synergies data
+        if 'prerequisite_relationships' in self.framework_synergies:
+            for framework, prereqs in self.framework_synergies['prerequisite_relationships'].items():
+                if framework in prerequisites:
+                    prerequisites[framework].update(prereqs)
+                else:
+                    prerequisites[framework] = set(prereqs)
+        
+        return prerequisites
         
     async def select_frameworks(
         self, 
@@ -309,12 +367,20 @@ class IntelligentFrameworkSelector:
             # Complexity fit score (0-100)
             complexity_fit = self._calculate_complexity_fit(framework, context)
             
+            # Academic rigor score (0-100)
+            academic_rigor_score = self._calculate_academic_rigor_score(framework, context)
+            
+            # Prerequisite score (0-100)
+            prerequisite_score = self._calculate_prerequisite_score(framework, context, scores)
+            
             # Total score (weighted average)
             total_score = (
-                context_score * 0.4 +
-                pattern_score * 0.3 +
-                synergy_score * 0.2 +
-                complexity_fit * 0.1
+                context_score * 0.30 +
+                pattern_score * 0.20 +
+                synergy_score * 0.15 +
+                complexity_fit * 0.10 +
+                academic_rigor_score * 0.15 +
+                prerequisite_score * 0.10
             )
             
             # Generate rationale
@@ -329,6 +395,8 @@ class IntelligentFrameworkSelector:
                 pattern_score=pattern_score,
                 synergy_score=synergy_score,
                 complexity_fit=complexity_fit,
+                academic_rigor_score=academic_rigor_score,
+                prerequisite_score=prerequisite_score,
                 rationale=rationale
             ))
             
@@ -436,6 +504,72 @@ class IntelligentFrameworkSelector:
         }
         
         return complexity_scores.get(framework.complexity.value, 70)
+    
+    def _calculate_academic_rigor_score(
+        self,
+        framework: Framework,
+        context: CompanyContext
+    ) -> float:
+        """Calculate academic rigor score based on PhD enhancements"""
+        if framework.id not in self.phd_enhancements:
+            return 50  # Neutral score if no PhD enhancement
+        
+        enhancement = self.phd_enhancements[framework.id]['phd_level_features']
+        score = 0
+        
+        # Check if context requires academic validation
+        if any('research' in str(opt).lower() or 'academic' in str(opt).lower() 
+               for opt in context.strategic_options):
+            score += 20
+        
+        # Score based on theoretical foundation strength
+        if enhancement.get('theoretical_foundation', {}).get('primary_theory'):
+            score += 20
+        
+        # Score based on empirical validation
+        if enhancement.get('academic_rigor', {}).get('peer_reviewed_basis'):
+            score += 20
+        
+        # Score based on quantitative methods
+        if enhancement.get('quantitative_enhancements', {}).get('statistical_techniques'):
+            score += 20
+        
+        # Bonus for ML/AI integration if company has data
+        if (context.key_metrics.get('customer_count', 0) > 1000 and
+            enhancement.get('advanced_applications', {}).get('machine_learning_integration')):
+            score += 20
+        
+        return min(score, 100)
+    
+    def _calculate_prerequisite_score(
+        self,
+        framework: Framework,
+        context: CompanyContext,
+        existing_scores: List[FrameworkScore]
+    ) -> float:
+        """Calculate if prerequisites are met"""
+        if framework.id not in self.framework_prerequisites:
+            return 100  # No prerequisites
+        
+        prerequisites = self.framework_prerequisites[framework.id]
+        if not prerequisites:
+            return 100
+        
+        # Check if team has required skills
+        team_skills = set()
+        if context.key_metrics.get('domain_expertise_years', 0) > 5:
+            team_skills.update(['Business fundamentals', 'Analytical thinking'])
+        if context.key_metrics.get('team_size', 10) > 20:
+            team_skills.update(['Strategic thinking', 'Market analysis'])
+        
+        # Count met prerequisites
+        met_count = len(team_skills.intersection(prerequisites))
+        total_count = len(prerequisites)
+        
+        if total_count == 0:
+            return 100
+        
+        return (met_count / total_count) * 100
         
     def _generate_rationale(
         self,
@@ -458,12 +592,12 @@ class IntelligentFrameworkSelector:
             
         if pattern_score > 0:
             rationale.append(
-                "Successfully used by similar companies in your situation"
+                "Successfully applied in similar contexts"
             )
             
         if framework.id in ["bcg_matrix", "porters_five_forces"]:
             rationale.append(
-                "Classic framework adapted for your specific industry"
+                "Framework specifically adapted for your industry context"
             )
             
         return rationale
@@ -532,6 +666,37 @@ class IntelligentFrameworkSelector:
             "success_criteria": self._define_success_criteria(framework, context)
         }
         
+        # Get PhD enhancement if available
+        phd_enhancement = None
+        synergistic_frameworks = []
+        prerequisites = []
+        conflicts = []
+        time_to_mastery = "2-4 weeks"
+        
+        if framework.id in self.phd_enhancements:
+            phd_data = self.phd_enhancements[framework.id]['phd_level_features']
+            phd_enhancement = phd_data
+            
+            # Extract synergistic frameworks
+            synergistic_frameworks = phd_data.get('interconnection_intelligence', {}).get(
+                'synergistic_frameworks', []
+            )
+            
+            # Extract prerequisites
+            prerequisites = phd_data.get('interconnection_intelligence', {}).get(
+                'prerequisite_knowledge', []
+            )
+            
+            # Extract conflicts
+            conflicts = phd_data.get('interconnection_intelligence', {}).get(
+                'conflicting_approaches', []
+            )
+            
+            # Extract time to mastery
+            time_to_mastery = phd_data.get('implementation_sophistication', {}).get(
+                'time_to_mastery', '2-4 weeks'
+            )
+        
         return CustomizedFramework(
             base_framework=framework,
             customizations=customizations,
@@ -539,7 +704,12 @@ class IntelligentFrameworkSelector:
             specific_metrics=specific_metrics,
             thresholds=thresholds,
             implementation_guide=implementation_guide,
-            expected_insights=expected_insights
+            expected_insights=expected_insights,
+            phd_enhancement=phd_enhancement,
+            synergistic_frameworks=synergistic_frameworks,
+            prerequisites=prerequisites,
+            conflicts=conflicts,
+            time_to_mastery=time_to_mastery
         )
         
     def _determine_specific_metrics(
@@ -730,27 +900,42 @@ class IntelligentFrameworkSelector:
         frameworks: List[CustomizedFramework],
         context: CompanyContext
     ) -> List[CustomizedFramework]:
-        """Add synergistic framework combinations"""
+        """Add synergistic framework combinations using PhD enhancements"""
         
-        # Identify natural combinations
-        synergies = {
-            "bcg_matrix": ["ansoff_matrix", "resource_allocation"],
-            "unit_economics": ["cohort_analysis", "pricing_strategy"],
-            "jobs_to_be_done": ["value_proposition", "product_roadmap"],
-            "porters_five_forces": ["competitive_positioning", "blue_ocean"]
-        }
+        # Create framework ID set for quick lookup
+        framework_ids = {f.base_framework.id for f in frameworks}
         
         for framework in frameworks:
-            if framework.base_framework.id in synergies:
-                complementary = synergies[framework.base_framework.id]
-                framework.customizations["synergistic_frameworks"] = complementary
-                framework.customizations["integration_points"] = (
-                    self._define_integration_points(
-                        framework.base_framework.id,
-                        complementary,
-                        context
+            # Use PhD-enhanced synergies if available
+            if framework.synergistic_frameworks:
+                # Filter to only include frameworks that are also selected
+                relevant_synergies = [
+                    syn for syn in framework.synergistic_frameworks 
+                    if syn in framework_ids
+                ]
+                
+                if relevant_synergies:
+                    framework.customizations["synergistic_frameworks"] = relevant_synergies
+                    framework.customizations["integration_points"] = (
+                        self._define_integration_points(
+                            framework.base_framework.id,
+                            relevant_synergies,
+                            context
+                        )
                     )
-                )
+            
+            # Add synergy scores from the synergy database
+            synergy_scores = {}
+            for other_framework in frameworks:
+                if other_framework.base_framework.id != framework.base_framework.id:
+                    key = f"{framework.base_framework.id}_{other_framework.base_framework.id}"
+                    if key in self.framework_synergies.get('synergy_scores', {}):
+                        synergy_scores[other_framework.base_framework.id] = (
+                            self.framework_synergies['synergy_scores'][key]
+                        )
+            
+            if synergy_scores:
+                framework.customizations["synergy_scores"] = synergy_scores
                 
         return frameworks
         

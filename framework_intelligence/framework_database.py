@@ -76,11 +76,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.STRATEGY,
         subcategory="Portfolio Management",
         when_to_use=[
-            "Evaluating product/business portfolio",
-            "Resource allocation decisions",
-            "Strategic positioning analysis",
-            "Growth strategy planning",
-            "Investment prioritization"
+            "Quarterly portfolio review to reallocate resources across product lines",
+            "Deciding which products to sunset when facing budget constraints",
+            "Identifying cash cows to fund new growth initiatives",
+            "Evaluating acquisition targets based on portfolio fit",
+            "Planning divestment of low-growth, low-share business units"
         ],
         key_components=[
             "Market Growth Rate (vertical axis)",
@@ -127,10 +127,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.STRATEGY,
         subcategory="Competitive Analysis",
         when_to_use=[
-            "Industry attractiveness analysis",
-            "Competitive strategy development",
-            "Market entry decisions",
-            "Investment evaluation"
+            "Assessing market attractiveness before $1M+ investment decision",
+            "Developing competitive strategy against new market entrants",
+            "Negotiating with suppliers when switching costs are high",
+            "Deciding whether to vertically integrate or outsource",
+            "Evaluating threat of substitute products/services"
         ],
         key_components=[
             "Competitive Rivalry",
@@ -172,11 +173,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.STRATEGY,
         subcategory="Strategic Planning",
         when_to_use=[
-            "Starting strategic planning process",
-            "Evaluating competitive position",
-            "Making major business decisions",
-            "Entering new markets",
-            "Launching new products"
+            "Making critical strategic decisions with incomplete data",
+            "Aligning leadership team on strategic direction",
+            "Evaluating build vs buy vs partner options",
+            "Planning next phase of company growth",
+            "Responding to competitive threats"
         ],
         key_components=[
             "Strengths (internal positive factors)",
@@ -274,11 +275,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.STRATEGY,
         subcategory="Innovation Strategy",
         when_to_use=[
-            "Seeking breakthrough innovation",
-            "Escaping intense competition",
-            "Creating new market categories",
-            "Differentiating from competitors",
-            "Pursuing growth in mature markets"
+            "Making critical strategic decisions with incomplete data",
+            "Aligning leadership team on strategic direction",
+            "Evaluating build vs buy vs partner options",
+            "Planning next phase of company growth",
+            "Responding to competitive threats"
         ],
         key_components=[
             "Value Innovation",
@@ -324,11 +325,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.STRATEGY,
         subcategory="Portfolio Management",
         when_to_use=[
-            "Managing product/business portfolio",
-            "Allocating resources across units",
-            "Making investment decisions",
-            "Planning divestments",
-            "Balancing portfolio risk"
+            "Quarterly portfolio review to reallocate resources across product lines",
+            "Deciding which products to sunset when facing budget constraints",
+            "Identifying cash cows to fund new growth initiatives",
+            "Evaluating acquisition targets based on portfolio fit",
+            "Planning divestment of low-growth, low-share business units"
         ],
         key_components=[
             "Stars (high growth, high share)",
@@ -371,11 +372,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.STRATEGY,
         subcategory="Growth Strategy",
         when_to_use=[
-            "Planning growth strategies",
-            "Evaluating expansion options",
-            "Risk assessment for growth",
-            "Strategic planning sessions",
-            "Market entry decisions"
+            "Making critical strategic decisions with incomplete data",
+            "Aligning leadership team on strategic direction",
+            "Evaluating build vs buy vs partner options",
+            "Planning next phase of company growth",
+            "Responding to competitive threats"
         ],
         key_components=[
             "Market Penetration (existing products, existing markets)",
@@ -419,11 +420,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.INNOVATION,
         subcategory="Innovation Process",
         when_to_use=[
-            "Solving complex problems",
-            "Creating user-centered solutions",
-            "Driving innovation initiatives",
-            "Improving customer experience",
-            "Developing new products/services"
+            "Redesigning user experience to increase NPS by 30 points",
+            "Creating breakthrough products for unmet needs",
+            "Solving complex B2B workflow challenges",
+            "Building empathy with users through research",
+            "Innovating in highly regulated industries"
         ],
         key_components=[
             "Empathize (understand users)",
@@ -469,11 +470,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.INNOVATION,
         subcategory="Startup Methodology",
         when_to_use=[
-            "Launching new ventures",
-            "Developing new products",
-            "Testing business models",
-            "Reducing market risk",
-            "Rapid innovation cycles"
+            "Validating B2B SaaS idea with <$10K investment",
+            "Building MVP in 4 weeks to test core hypothesis",
+            "Pivoting based on customer feedback patterns",
+            "Achieving product-market fit within 6 months",
+            "Iterating business model for unit economics"
         ],
         key_components=[
             "Build-Measure-Learn cycle",
@@ -509,6 +510,108 @@ FRAMEWORKS = {
             "Customer acquisition cost",
             "Iteration cycle time",
             "Pivot success rate"
+        ]
+    ),
+    
+    "lean_canvas": Framework(
+        id="lean_canvas",
+        name="Lean Canvas",
+        description="A one-page business model template for documenting key assumptions and hypotheses",
+        category=FrameworkCategory.INNOVATION,
+        subcategory="Business Model Design",
+        when_to_use=[
+            "Documenting business model assumptions for seed funding pitch",
+            "Weekly iteration of business model based on customer interviews",
+            "Aligning founding team on problem-solution fit",
+            "Identifying riskiest assumptions to test first",
+            "Pivoting business model after failed experiments"
+        ],
+        key_components=[
+            "Problem",
+            "Solution", 
+            "Key Metrics",
+            "Unique Value Proposition",
+            "Unfair Advantage",
+            "Channels",
+            "Customer Segments",
+            "Cost Structure",
+            "Revenue Streams"
+        ],
+        application_steps=[
+            "Identify top 3 problems worth solving",
+            "Define your target customer segments",
+            "Craft unique value proposition",
+            "Outline solution approach",
+            "Identify key metrics to track",
+            "Define channels to reach customers",
+            "Determine revenue streams",
+            "Calculate cost structure",
+            "Identify unfair advantages"
+        ],
+        expected_outcomes=[
+            "Clear business model hypothesis",
+            "Identified key assumptions to test",
+            "Focused product development priorities",
+            "Aligned team understanding",
+            "Rapid iteration capability"
+        ],
+        complexity=ComplexityLevel.BASIC,
+        time_to_implement="1-2 hours",
+        industry_relevance=["All industries"],
+        success_metrics=[
+            "Assumption validation rate",
+            "Time to first customer",
+            "Pivot decision speed",
+            "Team alignment score"
+        ]
+    ),
+    
+    "customer_development": Framework(
+        id="customer_development",
+        name="Customer Development",
+        description="Steve Blank's methodology for discovering and validating customer problems and solutions",
+        category=FrameworkCategory.CUSTOMER,
+        subcategory="Customer Discovery",
+        when_to_use=[
+            "Validating problem-solution fit through 50+ customer interviews",
+            "Testing willingness to pay before building product",
+            "Identifying early adopters for beta testing",
+            "Refining value proposition based on customer feedback",
+            "Deciding when to pivot vs persevere"
+        ],
+        key_components=[
+            "Customer Discovery",
+            "Customer Validation",
+            "Customer Creation",
+            "Company Building",
+            "Hypothesis Testing",
+            "Pivot vs Persevere Decisions"
+        ],
+        application_steps=[
+            "State your hypotheses",
+            "Get out of the building",
+            "Test problem hypotheses with customers",
+            "Test solution hypotheses",
+            "Verify business model",
+            "Prepare to scale or pivot",
+            "Validate with paying customers",
+            "Build repeatable sales process"
+        ],
+        expected_outcomes=[
+            "Validated customer problems",
+            "Confirmed solution fit",
+            "Repeatable sales process",
+            "Product-market fit signals",
+            "Clear customer segments"
+        ],
+        complexity=ComplexityLevel.INTERMEDIATE,
+        time_to_implement="4-12 weeks",
+        industry_relevance=["All industries"],
+        success_metrics=[
+            "Customer interview count",
+            "Hypothesis validation rate",
+            "Customer conversion rate",
+            "Time to product-market fit"
         ]
     ),
     
@@ -570,11 +673,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.INNOVATION,
         subcategory="Innovation Management",
         when_to_use=[
-            "Managing innovation projects",
-            "Reducing project risk",
-            "Allocating R&D resources",
-            "Go/no-go decisions",
-            "Complex product development"
+            "Managing 10+ concurrent innovation projects",
+            "Allocating R&D budget across risk levels",
+            "Killing projects that miss stage criteria",
+            "Accelerating high-potential initiatives",
+            "Balancing incremental vs breakthrough innovation"
         ],
         key_components=[
             "Discovery stage",
@@ -621,11 +724,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.INNOVATION,
         subcategory="Innovation Strategy",
         when_to_use=[
-            "Accelerating innovation",
-            "Accessing external expertise",
-            "Reducing R&D costs",
-            "Entering new markets",
-            "Building ecosystems"
+            "Solving innovation challenges systematically",
+            "Improving innovation performance metrics",
+            "Building competitive advantage through innovation",
+            "Scaling innovation from startup to growth stage",
+            "Optimizing innovation for efficiency"
         ],
         key_components=[
             "Outside-in innovation",
@@ -723,11 +826,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.GROWTH,
         subcategory="Growth Strategy",
         when_to_use=[
-            "Building sustainable growth",
-            "Reducing acquisition costs",
-            "Creating viral products",
-            "Scaling user base",
-            "Product-led growth"
+            "Designing viral mechanics to reduce CAC by 50%",
+            "Building content strategy that compounds over time",
+            "Creating user-generated content flywheel",
+            "Connecting product usage to new user acquisition",
+            "Optimizing referral programs for exponential growth"
         ],
         key_components=[
             "Input (new users)",
@@ -825,11 +928,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.GROWTH,
         subcategory="Viral Growth",
         when_to_use=[
-            "Building viral features",
-            "Optimizing referral programs",
-            "Reducing acquisition costs",
-            "Scaling user base",
-            "Social product growth"
+            "Solving growth challenges systematically",
+            "Improving growth performance metrics",
+            "Building competitive advantage through growth",
+            "Scaling growth from startup to growth stage",
+            "Optimizing growth for efficiency"
         ],
         key_components=[
             "Invites sent per user",
@@ -875,11 +978,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.GROWTH,
         subcategory="B2B Growth",
         when_to_use=[
-            "Enterprise sales",
-            "B2B SaaS growth",
-            "Account expansion",
-            "Reducing sales cycles",
-            "Maximizing LTV"
+            "Solving growth challenges systematically",
+            "Improving growth performance metrics",
+            "Building competitive advantage through growth",
+            "Scaling growth from startup to growth stage",
+            "Optimizing growth for efficiency"
         ],
         key_components=[
             "Initial land (small deal)",
@@ -978,11 +1081,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.FINANCIAL,
         subcategory="Customer Economics",
         when_to_use=[
-            "Evaluating marketing efficiency",
-            "Investment decisions",
-            "Growth sustainability",
-            "Channel optimization",
-            "Business model validation"
+            "Evaluating ROI of different marketing channels",
+            "Setting acquisition spend limits by channel",
+            "Improving retention to increase LTV by 2x",
+            "Achieving LTV:CAC ratio > 3:1 within 12 months",
+            "Deciding between growth and profitability focus"
         ],
         key_components=[
             "Customer Lifetime Value (LTV)",
@@ -1029,11 +1132,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.FINANCIAL,
         subcategory="Cash Management",
         when_to_use=[
-            "Startup financial planning",
-            "Fundraising decisions",
-            "Cost management",
-            "Scenario planning",
-            "Board reporting"
+            "Extending runway from 12 to 18+ months",
+            "Planning hiring based on burn rate targets",
+            "Preparing for Series A with healthy metrics",
+            "Managing cash during market downturns",
+            "Balancing growth spend vs runway extension"
         ],
         key_components=[
             "Gross burn rate",
@@ -1080,11 +1183,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.FINANCIAL,
         subcategory="SaaS Finance",
         when_to_use=[
-            "Running SaaS business",
-            "Investor reporting",
-            "Performance optimization",
-            "Benchmarking",
-            "Growth planning"
+            "Solving financial challenges systematically",
+            "Improving financial performance metrics",
+            "Building competitive advantage through financial",
+            "Scaling financial from startup to growth stage",
+            "Optimizing financial for efficiency"
         ],
         key_components=[
             "Monthly Recurring Revenue (MRR)",
@@ -1132,11 +1235,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.FINANCIAL,
         subcategory="Financial Planning",
         when_to_use=[
-            "Pricing decisions",
-            "New product launches",
-            "Business planning",
-            "Investment evaluation",
-            "Cost structure analysis"
+            "Determining minimum viable scale for profitability",
+            "Setting revenue targets for sustainability",
+            "Identifying fixed vs variable cost optimization",
+            "Planning path from negative to positive margins",
+            "Evaluating different pricing strategies"
         ],
         key_components=[
             "Fixed costs",
@@ -1184,11 +1287,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.OPERATIONS,
         subcategory="Process Improvement",
         when_to_use=[
-            "Process optimization",
-            "Cost reduction",
-            "Quality improvement",
-            "Efficiency gains",
-            "Waste elimination"
+            "Reducing operational costs by 30% in 6 months",
+            "Eliminating waste from manufacturing process",
+            "Improving delivery times from weeks to days",
+            "Building continuous improvement culture",
+            "Scaling operations 10x without 10x costs"
         ],
         key_components=[
             "Value stream mapping",
@@ -1235,11 +1338,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.OPERATIONS,
         subcategory="Quality Management",
         when_to_use=[
-            "Quality improvement initiatives",
-            "Defect reduction",
-            "Process standardization",
-            "Customer satisfaction improvement",
-            "Cost reduction through quality"
+            "Achieving 99.9% quality in production",
+            "Reducing customer complaints by 80%",
+            "Standardizing processes across locations",
+            "Meeting regulatory compliance requirements",
+            "Improving first-call resolution to 95%"
         ],
         key_components=[
             "DMAIC (Define, Measure, Analyze, Improve, Control)",
@@ -1286,11 +1389,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.OPERATIONS,
         subcategory="Project Management",
         when_to_use=[
-            "Software development projects",
-            "Complex project management",
-            "Rapid iteration needs",
-            "Changing requirements",
-            "Cross-functional collaboration"
+            "Transitioning 100+ person org to agile",
+            "Reducing release cycles from months to days",
+            "Improving developer productivity by 40%",
+            "Building autonomous product teams",
+            "Implementing DevOps transformation"
         ],
         key_components=[
             "Agile Manifesto principles",
@@ -1339,11 +1442,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.OPERATIONS,
         subcategory="Supply Chain Management",
         when_to_use=[
-            "Reducing supply chain costs",
-            "Improving delivery performance",
-            "Managing inventory levels",
-            "Risk mitigation",
-            "Sustainability initiatives"
+            "Solving operations challenges systematically",
+            "Improving operations performance metrics",
+            "Building competitive advantage through operations",
+            "Scaling operations from startup to growth stage",
+            "Optimizing operations for efficiency"
         ],
         key_components=[
             "Demand forecasting",
@@ -1542,11 +1645,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.MARKETING,
         subcategory="Customer Experience",
         when_to_use=[
-            "Improving customer experience",
-            "Identifying pain points",
-            "Optimizing touchpoints",
-            "Cross-functional alignment",
-            "Digital transformation"
+            "Solving marketing challenges systematically",
+            "Improving marketing performance metrics",
+            "Building competitive advantage through marketing",
+            "Scaling marketing from startup to growth stage",
+            "Optimizing marketing for efficiency"
         ],
         key_components=[
             "Customer personas",
@@ -1594,11 +1697,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.MARKETING,
         subcategory="Digital Marketing",
         when_to_use=[
-            "Building brand awareness",
-            "Lead generation",
-            "Customer education",
-            "SEO improvement",
-            "Thought leadership"
+            "Solving marketing challenges systematically",
+            "Improving marketing performance metrics",
+            "Building competitive advantage through marketing",
+            "Scaling marketing from startup to growth stage",
+            "Optimizing marketing for efficiency"
         ],
         key_components=[
             "Content strategy",
@@ -1646,11 +1749,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.MARKETING,
         subcategory="Brand Strategy",
         when_to_use=[
-            "Brand development",
-            "Rebranding initiatives",
-            "Competitive differentiation",
-            "Market positioning",
-            "Brand strategy refresh"
+            "Solving marketing challenges systematically",
+            "Improving marketing performance metrics",
+            "Building competitive advantage through marketing",
+            "Scaling marketing from startup to growth stage",
+            "Optimizing marketing for efficiency"
         ],
         key_components=[
             "Target audience",
@@ -1699,11 +1802,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.PRODUCT,
         subcategory="Product Strategy",
         when_to_use=[
-            "Feature prioritization",
-            "Product roadmap planning",
-            "Customer satisfaction analysis",
-            "Resource allocation",
-            "Competitive differentiation"
+            "Prioritizing features for next product release",
+            "Identifying delighters vs must-haves",
+            "Reducing feature bloat by 50%",
+            "Creating differentiation through delighters",
+            "Optimizing product-market fit"
         ],
         key_components=[
             "Basic features (must-haves)",
@@ -1750,11 +1853,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.PRODUCT,
         subcategory="Product Management",
         when_to_use=[
-            "Feature prioritization",
-            "Roadmap planning",
-            "Resource allocation",
-            "Sprint planning",
-            "Stakeholder alignment"
+            "Prioritizing engineering roadmap for Q4",
+            "Choosing between competing feature requests",
+            "Allocating resources across product teams",
+            "Balancing technical debt vs new features",
+            "Maximizing impact with limited resources"
         ],
         key_components=[
             "Reach (users affected)",
@@ -1800,11 +1903,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.PRODUCT,
         subcategory="Product Strategy",
         when_to_use=[
-            "Startup validation",
-            "Product pivot decisions",
-            "Growth readiness assessment",
-            "Investment discussions",
-            "Market expansion"
+            "Solving product challenges systematically",
+            "Improving product performance metrics",
+            "Building competitive advantage through product",
+            "Scaling product from startup to growth stage",
+            "Optimizing product for efficiency"
         ],
         key_components=[
             "Sean Ellis test (40% rule)",
@@ -1902,11 +2005,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.PRODUCT,
         subcategory="Product Strategy",
         when_to_use=[
-            "Long-term product planning",
-            "Portfolio management",
-            "Resource allocation",
-            "Marketing strategy",
-            "Innovation timing"
+            "Solving product challenges systematically",
+            "Improving product performance metrics",
+            "Building competitive advantage through product",
+            "Scaling product from startup to growth stage",
+            "Optimizing product for efficiency"
         ],
         key_components=[
             "Introduction stage",
@@ -1954,11 +2057,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.LEADERSHIP,
         subcategory="Leadership Development",
         when_to_use=[
-            "Team management",
-            "Leadership development",
-            "Performance improvement",
-            "Delegation decisions",
-            "Coaching approach"
+            "Leading through hypergrowth from 50 to 500 employees",
+            "Building high-performance culture remotely",
+            "Managing through organizational transformation",
+            "Developing next generation of leaders",
+            "Aligning teams around new strategic direction"
         ],
         key_components=[
             "Directing style (high task, low relationship)",
@@ -2005,11 +2108,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.LEADERSHIP,
         subcategory="Leadership Style",
         when_to_use=[
-            "Organizational change",
-            "Culture transformation",
-            "Innovation initiatives",
-            "Performance breakthrough",
-            "Employee engagement"
+            "Leading through hypergrowth from 50 to 500 employees",
+            "Building high-performance culture remotely",
+            "Managing through organizational transformation",
+            "Developing next generation of leaders",
+            "Aligning teams around new strategic direction"
         ],
         key_components=[
             "Idealized influence",
@@ -2056,11 +2159,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.LEADERSHIP,
         subcategory="Leadership Philosophy",
         when_to_use=[
-            "Building trust",
-            "Employee development",
-            "Cultural change",
-            "Team empowerment",
-            "Ethical leadership"
+            "Leading through hypergrowth from 50 to 500 employees",
+            "Building high-performance culture remotely",
+            "Managing through organizational transformation",
+            "Developing next generation of leaders",
+            "Aligning teams around new strategic direction"
         ],
         key_components=[
             "Listening",
@@ -2111,11 +2214,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.LEADERSHIP,
         subcategory="Leadership Development",
         when_to_use=[
-            "Succession planning",
-            "Leadership development",
-            "Organizational scaling",
-            "Talent management",
-            "Career pathing"
+            "Leading through hypergrowth from 50 to 500 employees",
+            "Building high-performance culture remotely",
+            "Managing through organizational transformation",
+            "Developing next generation of leaders",
+            "Aligning teams around new strategic direction"
         ],
         key_components=[
             "Individual contributor",
@@ -2164,11 +2267,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.LEADERSHIP,
         subcategory="Personal Development",
         when_to_use=[
-            "Leadership development",
-            "Team effectiveness",
-            "Conflict resolution",
-            "Communication improvement",
-            "Personal growth"
+            "Leading through hypergrowth from 50 to 500 employees",
+            "Building high-performance culture remotely",
+            "Managing through organizational transformation",
+            "Developing next generation of leaders",
+            "Aligning teams around new strategic direction"
         ],
         key_components=[
             "Self-awareness",
@@ -2215,11 +2318,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.ORGANIZATIONAL,
         subcategory="Organizational Design",
         when_to_use=[
-            "Organizational change",
-            "Performance improvement",
-            "Merger integration",
-            "Strategy implementation",
-            "Organizational diagnosis"
+            "Solving organizational challenges systematically",
+            "Improving organizational performance metrics",
+            "Building competitive advantage through organizational",
+            "Scaling organizational from startup to growth stage",
+            "Optimizing organizational for efficiency"
         ],
         key_components=[
             "Strategy",
@@ -2267,11 +2370,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.ORGANIZATIONAL,
         subcategory="Culture Management",
         when_to_use=[
-            "Culture transformation",
-            "M&A integration",
-            "Performance issues",
-            "Employee engagement",
-            "Strategic alignment"
+            "Solving organizational challenges systematically",
+            "Improving organizational performance metrics",
+            "Building competitive advantage through organizational",
+            "Scaling organizational from startup to growth stage",
+            "Optimizing organizational for efficiency"
         ],
         key_components=[
             "Cultural dimensions",
@@ -2318,11 +2421,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.ORGANIZATIONAL,
         subcategory="Performance Management",
         when_to_use=[
-            "Strategy execution",
-            "Performance management",
-            "KPI development",
-            "Strategic alignment",
-            "Management reporting"
+            "Solving organizational challenges systematically",
+            "Improving organizational performance metrics",
+            "Building competitive advantage through organizational",
+            "Scaling organizational from startup to growth stage",
+            "Optimizing organizational for efficiency"
         ],
         key_components=[
             "Financial perspective",
@@ -2420,11 +2523,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.ORGANIZATIONAL,
         subcategory="Organizational Structure",
         when_to_use=[
-            "Organizational redesign",
-            "Cost reduction",
-            "Efficiency improvement",
-            "Delayering initiatives",
-            "M&A integration"
+            "Solving organizational challenges systematically",
+            "Improving organizational performance metrics",
+            "Building competitive advantage through organizational",
+            "Scaling organizational from startup to growth stage",
+            "Optimizing organizational for efficiency"
         ],
         key_components=[
             "Span of control",
@@ -2473,11 +2576,11 @@ FRAMEWORKS = {
         category=FrameworkCategory.STRATEGY,
         subcategory="Competitive Analysis",
         when_to_use=[
-            "Cost analysis",
-            "Competitive advantage",
-            "Process improvement",
-            "Strategic planning",
-            "Outsourcing decisions"
+            "Making critical strategic decisions with incomplete data",
+            "Aligning leadership team on strategic direction",
+            "Evaluating build vs buy vs partner options",
+            "Planning next phase of company growth",
+            "Responding to competitive threats"
         ],
         key_components=[
             "Primary activities",

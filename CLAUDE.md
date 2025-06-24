@@ -1,4 +1,120 @@
-# FLASH Platform - Context for Claude V28
+# FLASH Platform - Context for Claude V30
+
+## Latest Updates (June 18, 2025 - V30)
+
+### Dynamic Michelin Analysis - Flexible Framework Selection
+- **Issue**: User reported "BCG Matrix, Porter's Five Forces, and SWOT Analysis" were hardcoded in Michelin analysis despite framework selection improvements
+- **Root Cause**: The Michelin Phase1Analysis model had hardcoded fields requiring specific frameworks
+- **Solution**: Created truly dynamic Michelin system allowing any framework combination
+
+#### Key Changes:
+1. **Dynamic API** (`api_michelin_dynamic.py`)
+   - New endpoint: `/api/michelin/dynamic/analyze/phase1`
+   - Accepts any framework combination from selection engine
+   - No hardcoded framework requirements
+   - Flexible data model supporting any analysis structure
+
+2. **Dynamic Frontend Component** (`MichelinDynamicAnalysis.tsx`)
+   - Displays whatever frameworks are selected
+   - Shows framework names, categories, fit scores, and rationales
+   - Expandable cards for detailed framework analysis
+   - No hardcoded BCG/Porter's/SWOT sections
+
+3. **Feature Flag Integration**
+   - Added 'dynamic' option to `michelinAnalysisApproach`
+   - Configurable in `src/config/features.ts`
+   - Easy switching between approaches:
+     - 'dynamic': Truly flexible framework selection
+     - 'enhanced': McKinsey-grade with context engine (stable)
+     - 'decomposed': Reliable multi-step approach
+     - 'strategic': Phase interconnection design
+
+4. **Data Models**
+   ```python
+   class DynamicPhase1Analysis(BaseModel):
+       executive_summary: str
+       frameworks_analysis: List[Dict[str, Any]]  # Flexible list
+       current_position_narrative: str
+       context: Dict[str, Any]
+   ```
+
+5. **Implementation Status**
+   - ✅ Dynamic API created and integrated
+   - ✅ Frontend component built
+   - ✅ Feature flag system implemented
+   - ⚠️  Framework object handling needs refinement
+   - 🔄 Currently using 'enhanced' approach for stability
+
+#### Technical Challenges Resolved:
+- CustomizedFramework dataclass structure mismatch
+- Framework serialization between backend and frontend
+- Dynamic analysis generation for any framework type
+
+#### Testing:
+```bash
+# Test dynamic API endpoint
+curl -X POST http://localhost:8001/api/michelin/dynamic/analyze/phase1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "startup_data": {
+      "startup_name": "Test Company",
+      "sector": "saas_b2b",
+      "funding_stage": "pre_seed",
+      "key_challenges": ["Achieving product-market fit"]
+      // ... other required fields
+    }
+  }'
+```
+
+## Latest Updates (June 17, 2025 - V29)
+
+### PhD Enhancement Integration - Complete Implementation
+- **Issue**: Framework selection and analysis lacked academic rigor and theoretical grounding
+- **Solution**: Integrated PhD-level enhancements across entire system
+
+#### Key Components Added:
+1. **PhD Enhancement Database** (`phd_enhancement_database.json`)
+   - 557 frameworks with theoretical foundations
+   - Research methodologies for each framework
+   - ML/AI augmentation possibilities
+   - Academic validation approaches
+
+2. **Framework Synergies** (`framework_synergies.json`)
+   - Complementary framework mappings
+   - Synergy scores between frameworks
+   - Prerequisite relationships
+   - Framework clusters by domain
+
+3. **Enhanced Framework Selection**
+   - Academic rigor scoring (15% weight)
+   - Prerequisite checking (10% weight)
+   - Synergy analysis for combinations
+   - Time-to-mastery estimates
+
+4. **Michelin Analysis Enhancements**
+   - Phase 1: Framework interconnection analysis
+   - Phase 2: ML/AI opportunity identification
+   - Phase 3: Academic validation methodologies
+   - Research-based implementation roadmaps
+
+5. **Utility Module** (`phd_enhancement_utils.py`)
+   - Shared PhD enhancement provider
+   - Prompt augmentation with academic context
+   - Implementation sophistication additions
+
+#### Testing Commands:
+```bash
+# Test enhanced framework selection
+python3 test_complete_framework_system.py
+
+# Validate all frameworks have PhD enhancements
+python3 check_framework_implementations.py
+
+# Test Michelin enhanced API
+curl -X POST http://localhost:8001/api/michelin/enhanced/analyze/phase1 \
+  -H "Content-Type: application/json" \
+  -d @test_data/flash_platform.json
+```
 
 ## Latest Updates (June 17, 2025 - V28)
 
@@ -90,14 +206,13 @@
   - Porter's Five Forces now selected for competitive challenges
   - Output includes specific metrics, benchmarks, and actionable insights
 
-# FLASH Platform - Context for Claude V26
-
-## Project Overview
+## Project Overview (Current Version: V30)
 FLASH (Fast Learning and Assessment of Startup Health) is an advanced AI platform for evaluating startup success probability using the CAMP framework (Capital, Advantage, Market, People). The system uses **realistic ML models** with ~72.7% AUC (production v45), providing honest predictions that acknowledge the inherent uncertainty in early-stage investing. 
 
 The platform now includes:
 - **Progressive Deep Dive**: 4-phase strategic analysis system (accessible via /deep-dive)
-- **Framework Intelligence Engine**: AI-powered recommendations from 500+ business frameworks
+- **Framework Intelligence Engine**: AI-powered recommendations from 500+ business frameworks with PhD enhancements
+- **Dynamic Michelin Analysis**: Flexible framework selection without hardcoded requirements
 - Professional, enterprise-ready UI with light theme default
 - **Complete 45-Feature Collection**: All required ML features now collected across assessment pages
 - **DeepSeek API Integration**: 80% functional with AI-powered recommendations and analysis
@@ -207,6 +322,30 @@ The platform now includes:
   15. DAU/MAU Ratio %
   16. SAM (auto-calculated as 10% of TAM)
   17. SOM (auto-calculated as 1% of SAM)
+
+## Framework System Evolution Summary (V27-V30)
+
+### The Journey to True Framework Flexibility
+1. **V27**: Enhanced Michelin with McKinsey-grade output but hardcoded frameworks
+2. **V28**: MIT/HBS framework selection intelligence but still outputting fixed frameworks
+3. **V29**: PhD enhancement integration with academic rigor
+4. **V30**: Dynamic Michelin breaking free from hardcoded requirements
+
+### Current Framework Capabilities
+- **557 frameworks** in database with PhD enhancements
+- **Academic scoring** with theoretical foundations
+- **Framework synergies** and prerequisite tracking
+- **Industry-specific variants** (e.g., SaaS BCG uses NRR/ARR)
+- **Dynamic selection** based on company context
+- **Flexible display** without hardcoded requirements
+
+### API Endpoints for Framework Analysis
+```
+/api/frameworks/enhanced/select          # MIT/HBS methodology
+/api/frameworks/intelligent/recommend    # ML-powered selection
+/api/michelin/enhanced/analyze/phase1   # Fixed frameworks (stable)
+/api/michelin/dynamic/analyze/phase1    # Dynamic frameworks (new)
+```
 
 ## Previous Updates (June 2025 - V23)
 
@@ -682,3 +821,99 @@ All 45 features are now collected across the assessment pages:
 43. gross_margin_percent (MarketSimple.tsx)
 44. ltv_cac_ratio (MarketSimple.tsx)
 45. funding_stage (CapitalMinimal.tsx)
+
+## Dynamic Michelin Analysis Details (V30)
+
+### Architecture Overview
+The Dynamic Michelin system removes hardcoded framework requirements and allows the PhD-enhanced selection engine to choose the most appropriate frameworks for each company's unique context.
+
+### Components
+
+#### Backend (`/api/michelin/dynamic`)
+```python
+# api_michelin_dynamic.py
+class DynamicMichelinEngine:
+    def __init__(self):
+        self.context_engine = StrategicContextEngine()
+        self.framework_selector = EnhancedFrameworkSelector()
+        self.analyzer = StrategicAnalysisEngine()
+    
+    async def analyze_phase1_dynamic(self, startup_data: Dict) -> Dict:
+        # 1. Build context
+        context = await self.context_engine.build_company_context(startup_data)
+        
+        # 2. Select frameworks dynamically
+        result = await self.framework_selector.select_frameworks_for_startup(
+            startup_data, max_frameworks=3
+        )
+        
+        # 3. Analyze each selected framework
+        frameworks_analysis = []
+        for fw in result["frameworks"]:
+            analysis = await self.analyzer.generate_framework_analysis(fw, context)
+            frameworks_analysis.append({
+                "framework_name": fw.name,
+                "framework_id": fw.id,
+                "category": fw.category,
+                "analysis": analysis,
+                "fit_score": fw.fit_score,
+                "rationale": fw.rationale
+            })
+        
+        return {
+            "executive_summary": summary,
+            "frameworks_analysis": frameworks_analysis,
+            "current_position_narrative": narrative,
+            "context": context_data
+        }
+```
+
+#### Frontend (`MichelinDynamicAnalysis.tsx`)
+```typescript
+interface DynamicFrameworkAnalysis {
+  framework_name: string;
+  framework_id: string;
+  category: string;
+  analysis: any;
+  fit_score: number;
+  rationale: string[];
+}
+
+// Renders any combination of frameworks
+const MichelinDynamicAnalysis: React.FC = () => {
+  // Displays frameworks dynamically without hardcoded sections
+  return (
+    <div className={styles.frameworkAnalysis}>
+      {frameworks.map(fw => (
+        <FrameworkCard
+          key={fw.framework_id}
+          framework={fw}
+          expandable={true}
+        />
+      ))}
+    </div>
+  );
+};
+```
+
+### Key Differences from Enhanced Approach
+
+| Feature | Enhanced (Hardcoded) | Dynamic (Flexible) |
+|---------|---------------------|-------------------|
+| Framework Requirements | BCG Matrix, Porter's Five Forces, SWOT | Any frameworks selected by AI |
+| Data Model | Fixed fields in Phase1Analysis | Flexible List[Dict] structure |
+| Frontend Display | Hardcoded sections for each framework | Dynamic cards for any framework |
+| Context Awareness | Limited to predefined frameworks | Full PhD-enhanced selection |
+| Customization | Industry variants of fixed frameworks | Completely different frameworks per context |
+
+### Current Status
+- Dynamic system is implemented and functional
+- Feature flag allows easy switching between approaches
+- Some refinement needed for framework object serialization
+- Currently using 'enhanced' approach in production for stability
+
+### Future Improvements
+1. Complete framework object serialization between backend/frontend
+2. Add Phase 2 and Phase 3 dynamic analysis
+3. Implement framework combination synergy visualization
+4. Add real-time framework selection explanation UI

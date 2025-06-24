@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FLASH Results Page Test</title>
+    <style>
+        body { 
+            font-family: -apple-system, system-ui; 
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            background: #007AFF;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0066CC;
+        }
+        .results {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .status {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .status.success { background: #d4edda; color: #155724; }
+        .status.error { background: #f8d7da; color: #721c24; }
+        .iframe-container {
+            width: 100%;
+            height: 800px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>FLASH Results Page - Live Testing</h1>
+    
+    <div class="test-section">
+        <h2>1. Test Backend API</h2>
+        <button onclick="testBackend()">Test Backend Health</button>
+        <button onclick="testPrediction()">Test Prediction Endpoint</button>
+        <div id="backend-results" class="results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Navigate to Results Page</h2>
+        <p>The app uses React Router. Click below to open the test results page in a new tab:</p>
+        <button onclick="window.open('http://localhost:3000/test-results', '_blank')">Open Test Results Page</button>
+        <button onclick="window.open('http://localhost:3000/', '_blank')">Open Landing Page</button>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Live Preview</h2>
+        <p>This iframe shows the actual results page:</p>
+        <div class="iframe-container">
+            <iframe id="preview" src="http://localhost:3000/test-results"></iframe>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Test Direct API Call</h2>
+        <button onclick="testDirectAPI()">Test Full Analysis Flow</button>
+        <div id="direct-results" class="results"></div>
+    </div>
+
+    <script>
+        async function testBackend() {
+            const resultsDiv = document.getElementById('backend-results');
+            try {
+                resultsDiv.innerHTML = 'Testing backend...';
+                const response = await fetch('http://localhost:8001/health');
+                const data = await response.json();
+                resultsDiv.innerHTML = `<span class="status success">✓ Backend is running</span>\n\n${JSON.stringify(data, null, 2)}`;
+            } catch (error) {
+                resultsDiv.innerHTML = `<span class="status error">✗ Backend error</span>\n\n${error.message}`;
+            }
+        }
+
+        async function testPrediction() {
+            const resultsDiv = document.getElementById('backend-results');
+            const testData = {
+                company_name: "Test Startup",
+                founding_date: "2023-01-01",
+                industry: "technology",
+                sector: "saas",
+                business_model: "subscription",
+                stage: "seed",
+                revenue_stage: "pre_revenue",
+                funding_amount: 1000000,
+                funding_round_type: "seed",
+                team_size: 10,
+                technical_team_size: 5,
+                revenue: 0,
+                customer_acquisition_cost: 0,
+                gross_margin: 0,
+                user_retention_rate: 0,
+                market_position: "early_stage",
+                product_stage: "mvp",
+                time_to_profitability: 24,
+                runway_months: 18,
+                founders_experience: 5,
+                previous_successful_exits: 0,
+                key_partnerships: 2,
+                customer_concentration: 0,
+                regulatory_challenges: "low",
+                technical_complexity: "medium",
+                network_effects: false,
+                economies_of_scale: true,
+                switching_costs: "medium",
+                capital_efficiency: "medium",
+                viral_coefficient: 0,
+                intellectual_property: "pending_patents",
+                direct_sales: true,
+                channel_partners: false,
+                online_self_service: true,
+                market_size_usd: 1000000000,
+                market_growth_rate: 20,
+                competition_level: "moderate",
+                barrier_to_entry: "medium",
+                geographic_focus: "north_america"
+            };
+
+            try {
+                resultsDiv.innerHTML = 'Testing prediction endpoint...';
+                const response = await fetch('http://localhost:8001/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(testData)
+                });
+                const data = await response.json();
+                resultsDiv.innerHTML = `<span class="status success">✓ Prediction successful</span>\n\n${JSON.stringify(data, null, 2)}`;
+            } catch (error) {
+                resultsDiv.innerHTML = `<span class="status error">✗ Prediction error</span>\n\n${error.message}`;
+            }
+        }
+
+        async function testDirectAPI() {
+            const resultsDiv = document.getElementById('direct-results');
+            const assessmentData = {
+                companyInfo: {
+                    companyName: "AI Startup Co",
+                    stage: "seed",
+                    industry: "technology",
+                    sector: "ai_ml"
+                },
+                capital: {
+                    fundingAmount: 2000000,
+                    cashOnHand: 1500000,
+                    monthlyBurnRate: 100000,
+                    annualRevenueRunRate: 500000,
+                    runwayMonths: 15,
+                    revenueGrowthRate: 50,
+                    timeToBreakeven: 18,
+                    capitalEfficiency: 7
+                },
+                advantage: {
+                    competitiveAdvantage: 8,
+                    technicalComplexity: 8,
+                    productUniqueness: 7,
+                    ipOwnership: true,
+                    networkEffects: 6,
+                    switchingCosts: 7,
+                    marketTiming: 8
+                },
+                market: {
+                    marketSize: 5000000000,
+                    marketGrowthRate: 25,
+                    competitionLevel: 6,
+                    customerAcquisitionCost: 1000,
+                    customerLifetimeValue: 10000,
+                    marketPositioning: 7,
+                    geographicFocus: "global"
+                },
+                people: {
+                    teamSize: 15,
+                    technicalTeamSize: 10,
+                    foundersExperience: 8,
+                    previousExits: 1,
+                    advisorQuality: 7,
+                    boardStrength: 6,
+                    cultureFit: 8
+                }
+            };
+
+            try {
+                resultsDiv.innerHTML = 'Running full analysis...';
+                
+                // First, transform the data
+                const apiData = {
+                    ...assessmentData.companyInfo,
+                    ...assessmentData.capital,
+                    ...assessmentData.advantage,
+                    ...assessmentData.market,
+                    ...assessmentData.people,
+                    founding_date: "2023-01-01",
+                    business_model: "subscription",
+                    revenue_stage: "pre_revenue",
+                    funding_round_type: "seed",
+                    product_stage: "mvp",
+                    market_position: "early_stage",
+                    direct_sales: true,
+                    online_self_service: true,
+                    barrier_to_entry: "medium"
+                };
+
+                const response = await fetch('http://localhost:8001/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(apiData)
+                });
+                
+                const data = await response.json();
+                resultsDiv.innerHTML = `<span class="status success">✓ Analysis complete</span>\n\nSuccess Probability: ${Math.round(data.success_probability * 100)}%\n\nCAMP Scores:\n${JSON.stringify(data.camp_scores, null, 2)}\n\nFull Response:\n${JSON.stringify(data, null, 2)}`;
+            } catch (error) {
+                resultsDiv.innerHTML = `<span class="status error">✗ Analysis error</span>\n\n${error.message}`;
+            }
+        }
+
+        // Auto-test on load
+        window.onload = () => {
+            testBackend();
+        };
+    </script>
+</body>
+</html>

@@ -32,6 +32,9 @@ from api_michelin_llm_analysis import (
     Phase3Request
 )
 
+# Import PhD enhancement utilities
+from phd_enhancement_utils import phd_provider
+
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -97,7 +100,8 @@ class DecomposedMichelinEngine:
     # BCG Matrix Analysis Methods
     async def get_bcg_position(self, data: StartupData) -> str:
         """Determine BCG Matrix position"""
-        prompt = f"""
+        # Enhance prompt with PhD insights
+        base_prompt = f"""
 Company: {data.startup_name}
 Market Share: {data.market_share_percentage:.2f}%
 Market Growth Rate: {data.market_growth_rate_annual}%
@@ -111,6 +115,9 @@ Based on BCG Matrix criteria:
 Question: Is this company a Star, Cash Cow, Question Mark, or Dog?
 Answer with ONLY one of these four terms.
 """
+        
+        # Enhance with PhD insights if available
+        prompt = phd_provider.enhance_analysis_prompt(base_prompt, "bcg_matrix")
         
         try:
             response = await self._call_deepseek(prompt, max_tokens=50)
@@ -881,7 +888,7 @@ Provide a 2-3 sentence strategic recommendation focusing on the most critical ac
     # Implementation Roadmap Methods
     async def create_implementation_roadmap(self, data: StartupData) -> str:
         """Create implementation roadmap"""
-        prompt = f"""
+        base_prompt = f"""
 Create a 90-day implementation roadmap for {data.startup_name}:
 - Team size: {data.team_size_full_time}
 - Cash: ${data.cash_on_hand_usd:,.0f}
@@ -890,8 +897,15 @@ Create a 90-day implementation roadmap for {data.startup_name}:
 Provide 3 phases (30 days each) with 2-3 key actions per phase.
 """
         
+        # Enhance with PhD insights - assuming common frameworks for implementation
+        enhanced_prompt = base_prompt
+        for framework_id in ["lean_startup", "agile_methodology", "okr_framework"]:
+            theory = phd_provider.get_theoretical_foundation(framework_id)
+            if theory:
+                enhanced_prompt += f"\nConsider {framework_id} principles based on {theory}."
+        
         try:
-            response = await self._call_deepseek(prompt, max_tokens=300)
+            response = await self._call_deepseek(enhanced_prompt, max_tokens=300)
             return response
         except:
             return f"""Days 1-30: Foundation - Optimize burn rate, validate unit economics, strengthen core team.

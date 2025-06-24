@@ -373,6 +373,13 @@ try:
 except Exception as e:
     logger.warning(f"Could not include Enhanced Michelin Analysis endpoints: {e}")
 
+# Include Dynamic Michelin endpoints
+try:
+    from api_michelin_dynamic import include_dynamic_michelin_routes
+    include_dynamic_michelin_routes(app)
+except Exception as e:
+    logger.warning(f"Could not import Dynamic Michelin endpoints: {e}")
+
 # Include Intelligent Framework endpoints
 try:
     include_intelligent_routes(app)

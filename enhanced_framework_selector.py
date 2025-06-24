@@ -43,7 +43,19 @@ class EnhancedFrameworkSelector:
         try:
             # Build strategic context
             logger.info(f"Building context for {startup_data.get('startup_name', 'Unknown')}")
-            context = await self.context_engine.build_company_context(startup_data)
+            logger.info(f"Startup data keys: {list(startup_data.keys())}")
+            logger.info(f"Startup data sample: revenue={startup_data.get('revenue')}, growth_rate={startup_data.get('growth_rate')}")
+            try:
+                context = await self.context_engine.build_company_context(startup_data)
+            except Exception as e:
+                logger.error(f"Error building context: {str(e)}")
+                # Return fallback frameworks directly if context building fails
+                return {
+                    "success": False,
+                    "error": f"Context building failed: {str(e)}",
+                    "frameworks": [],
+                    "fallback": self._get_fallback_frameworks(startup_data)
+                }
             
             # Select frameworks using advanced logic
             logger.info("Selecting frameworks using advanced academic methodology")

@@ -295,6 +295,12 @@ export const MichelinStrategicAnalysis: React.FC<MichelinAnalysisProps> = ({ sta
 
     return (
       <div className={styles.phaseContent}>
+        {phase1.frameworks_selected && (
+          <div className={styles.frameworksSelected}>
+            <h4>Frameworks Applied:</h4>
+            <p>{phase1.frameworks_selected.join(', ')}</p>
+          </div>
+        )}
         <div className={styles.section}>
           <h3>Executive Summary</h3>
           <p className={styles.narrative}>{phase1.executive_summary}</p>
@@ -944,7 +950,7 @@ export const MichelinStrategicAnalysis: React.FC<MichelinAnalysisProps> = ({ sta
               <div className={styles.phaseLoading}>
                 <div className={styles.spinner}></div>
                 <h3>Analyzing Current Position...</h3>
-                <p>Generating BCG Matrix, Porter's Five Forces, and SWOT Analysis</p>
+                <p>Selecting optimal frameworks and generating strategic analysis</p>
               </div>
             ) : phaseStatus.phase1 === 'error' ? (
               <div className={styles.phaseError}>

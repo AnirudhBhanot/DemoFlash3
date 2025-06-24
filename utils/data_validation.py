@@ -227,7 +227,7 @@ class DataValidator:
             
             # Enum fields
             "funding_stage": {
-                "values": ["pre_seed", "seed", "series_a", "series_b", "series_c", "growth"],
+                "values": ["pre_seed", "seed", "series_a", "series_b", "series_c", "growth", "pre-seed"],
                 "required": False,
                 "type": "enum"
             },

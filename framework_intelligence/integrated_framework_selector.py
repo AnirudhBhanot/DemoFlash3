@@ -54,11 +54,18 @@ class IntegratedFrameworkSelector:
                 max_recommendations=max_frameworks * 2  # Get more for filtering
             )
             
+            # Log all framework IDs and scores from academic recommendations
+            logger.info(f"Academic recommendations received: {len(academic_recs)} frameworks")
+            for idx, rec in enumerate(academic_recs):
+                logger.info(f"  [{idx}] Framework ID: {rec.framework_id}, Score: {rec.fit_score}")
+            
             # Filter and customize using original system
             customized_frameworks = []
-            for rec in academic_recs[:max_frameworks]:
+            for idx, rec in enumerate(academic_recs[:max_frameworks]):
+                logger.info(f"Processing recommendation [{idx}] - Framework ID: {rec.framework_id}")
                 framework = self._get_framework_by_id(rec.framework_id)
                 if framework:
+                    logger.info(f"  ✓ Framework found: {framework.name}")
                     customized = await self.intelligent_selector._customize_framework(
                         framework, strategic_context
                     )
@@ -71,6 +78,14 @@ class IntegratedFrameworkSelector:
                         "prerequisites": rec.prerequisites
                     }
                     customized_frameworks.append(customized)
+                    logger.info(f"  ✓ Framework customized and added to list")
+                else:
+                    logger.warning(f"  ✗ Framework NOT FOUND in database: {rec.framework_id}")
+            
+            # Log final list before returning
+            logger.info(f"Final customized frameworks list: {len(customized_frameworks)} frameworks")
+            for idx, cf in enumerate(customized_frameworks):
+                logger.info(f"  [{idx}] {cf.base_framework.name} (ID: {cf.base_framework.id})")
                     
             return customized_frameworks
         else:
@@ -167,9 +182,24 @@ class IntegratedFrameworkSelector:
             "customer_acquisition": ProblemArchetype.CUSTOMER_DISCOVERY,
             "retention": ProblemArchetype.UNIT_ECONOMICS_OPTIMIZATION,
             "unit_economics": ProblemArchetype.UNIT_ECONOMICS_OPTIMIZATION,
+            "unit economics": ProblemArchetype.UNIT_ECONOMICS_OPTIMIZATION,
             "competition": ProblemArchetype.COMPETITIVE_STRATEGY,
+            "competitive": ProblemArchetype.COMPETITIVE_STRATEGY,
+            "intense_competition": ProblemArchetype.COMPETITIVE_STRATEGY,
+            "market_differentiation": ProblemArchetype.COMPETITIVE_STRATEGY,
+            "competitive_positioning": ProblemArchetype.COMPETITIVE_STRATEGY,
+            "positioning": ProblemArchetype.COMPETITIVE_STRATEGY,
             "scaling": ProblemArchetype.GROWTH_MECHANICS,
-            "pmf": ProblemArchetype.PRODUCT_MARKET_FIT
+            "growth": ProblemArchetype.GROWTH_MECHANICS,
+            "pmf": ProblemArchetype.PRODUCT_MARKET_FIT,
+            "product-market": ProblemArchetype.PRODUCT_MARKET_FIT,
+            "portfolio": ProblemArchetype.PORTFOLIO_OPTIMIZATION,
+            "resource allocation": ProblemArchetype.PORTFOLIO_OPTIMIZATION,
+            "resource": ProblemArchetype.PORTFOLIO_OPTIMIZATION,
+            "allocation": ProblemArchetype.PORTFOLIO_OPTIMIZATION,
+            "initiatives": ProblemArchetype.PORTFOLIO_OPTIMIZATION,
+            "multiple products": ProblemArchetype.PORTFOLIO_OPTIMIZATION,
+            "product portfolio": ProblemArchetype.PORTFOLIO_OPTIMIZATION
         }
         
         # Determine available data
@@ -178,6 +208,10 @@ class IntegratedFrameworkSelector:
             available_data.append(DataRequirement.BASIC_QUANTITATIVE)
         if strategic_context.key_metrics.get("ltv_cac", 0) > 0:
             available_data.append(DataRequirement.ADVANCED_METRICS)
+        if strategic_context.key_metrics.get("market_share", 0) > 0:
+            available_data.append(DataRequirement.MARKET_DATA)
+        if hasattr(strategic_context, 'competitive_dynamics') and strategic_context.competitive_dynamics:
+            available_data.append(DataRequirement.COMPETITIVE_INTEL)
             
         # Convert challenges to problem archetypes
         primary_problems = []
@@ -191,20 +225,32 @@ class IntegratedFrameworkSelector:
         # Ensure we have at least one problem
         if not primary_problems:
             primary_problems = [ProblemArchetype.BUSINESS_MODEL_DESIGN]
+        
+        # Get team size from key_metrics (we added it there)
+        team_size = strategic_context.key_metrics.get("team_size", 10)
+        
+        # Check if company is in fundraising mode
+        is_fundraising = ("fundraising" in str(strategic_context.key_challenges).lower() or
+                         strategic_context.stage in ["seed", "series_a", "series_b"])
+        
+        # Add advanced metrics to available data if LTV/CAC exists
+        if strategic_context.key_metrics.get("ltv_cac", 0) > 0:
+            if DataRequirement.ADVANCED_METRICS not in available_data:
+                available_data.append(DataRequirement.ADVANCED_METRICS)
             
         return AcademicContext(
             company_name=strategic_context.company_name,
             industry=industry_map.get(strategic_context.industry, IndustryContext.UNIVERSAL),
             stage=stage_map.get(strategic_context.stage, TemporalStage.VALIDATION),
-            team_size=strategic_context.key_metrics.get("team_size", 10),
+            team_size=team_size,
             primary_problems=primary_problems,
             available_data=available_data,
             revenue_usd=strategic_context.key_metrics.get("revenue", 0),
             growth_rate_percent=strategic_context.key_metrics.get("growth_rate", 0),
             burn_rate_usd=strategic_context.key_metrics.get("burn_rate", 0),
-            runway_months=strategic_context.key_metrics.get("runway_months", 12),
-            is_crisis_mode=strategic_context.key_metrics.get("runway_months", 12) < 6,
-            is_fundraising="fundraising" in str(strategic_context.key_challenges).lower()
+            runway_months=strategic_context.key_metrics.get("runway", 12),  # Note: "runway" not "runway_months"
+            is_crisis_mode=strategic_context.key_metrics.get("runway", 12) < 6,
+            is_fundraising=is_fundraising
         )
     
     def _get_framework_by_id(self, framework_id: str):

@@ -5,11 +5,12 @@
 
 export const featureFlags = {
   // Michelin Analysis approach
-  // Set to 'enhanced' to use the McKinsey-grade analysis with context engine (NEW - BEST)
+  // Set to 'dynamic' to use truly flexible framework selection (NEW - RECOMMENDED)
+  // Set to 'enhanced' to use the McKinsey-grade analysis with context engine
   // Set to 'decomposed' to use the reliable approach (stable)
   // Set to 'original' to use the JSON-based approach (prone to parsing errors)
   // Set to 'strategic' to use the redesigned approach with phase interconnection
-  michelinAnalysisApproach: 'enhanced' as 'enhanced' | 'decomposed' | 'original' | 'strategic',
+  michelinAnalysisApproach: 'enhanced' as 'dynamic' | 'enhanced' | 'decomposed' | 'original' | 'strategic',
   
   // Enable detailed logging for Michelin analysis
   michelinAnalysisDebugMode: false,
@@ -23,7 +24,9 @@ export const getMichelinEndpoint = (phase: 1 | 2 | 3): string => {
   const baseUrl = 'http://localhost:8001/api/michelin';
   const approach = featureFlags.michelinAnalysisApproach;
   
-  if (approach === 'enhanced') {
+  if (approach === 'dynamic') {
+    return `${baseUrl}/dynamic/analyze/phase${phase}`;
+  } else if (approach === 'enhanced') {
     return `${baseUrl}/enhanced/analyze/phase${phase}`;
   } else if (approach === 'decomposed') {
     return `${baseUrl}/decomposed/analyze/phase${phase}`;

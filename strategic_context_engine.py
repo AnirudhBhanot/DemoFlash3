@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Strategic Context Engine - Build rich company context for McKinsey-grade analysis
+Strategic Context Engine - Build rich company context for comprehensive strategic analysis
+Enhanced with research-backed framework intelligence and academic rigor
 """
 
 import json
@@ -10,6 +11,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 import numpy as np
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -84,6 +86,20 @@ class HypothesisNode:
 
 
 @dataclass
+class FrameworkPhDEnhancement:
+    """PhD-level enhancement for a framework"""
+    framework_id: str
+    theoretical_foundation: Dict[str, Any]
+    research_methodology: Dict[str, Any]
+    quantitative_enhancements: Dict[str, Any]
+    academic_rigor: Dict[str, Any]
+    advanced_applications: Dict[str, Any]
+    interconnection_intelligence: Dict[str, Any]
+    implementation_sophistication: Dict[str, Any]
+    measurement_validation: Dict[str, Any]
+
+
+@dataclass
 class CompanyContext:
     """Rich context for strategic analysis"""
     # Basic info
@@ -126,6 +142,11 @@ class CompanyContext:
     hypothesis_tree: HypothesisNode
     key_uncertainties: List[str]
     strategic_options: List[str]
+    
+    # PhD-level enhancements
+    recommended_frameworks_phd: List[FrameworkPhDEnhancement] = field(default_factory=list)
+    academic_validation_methods: List[str] = field(default_factory=list)
+    research_backed_insights: Dict[str, Any] = field(default_factory=dict)
 
 
 class StrategicContextEngine:
@@ -135,6 +156,13 @@ class StrategicContextEngine:
         self.industry_benchmarks = self._load_industry_benchmarks()
         self.pattern_library = self._load_successful_patterns()
         self.competitive_data = {}
+        self.phd_enhancements = self._load_phd_enhancements()
+        self.framework_synergies = self._load_framework_synergies()
+    
+    def _safe_get(self, data: Dict[str, Any], key: str, default: Any = 0) -> Any:
+        """Safely get a value from dict, ensuring it's not None for comparisons"""
+        value = data.get(key, default)
+        return default if value is None else value
         
     def _load_industry_benchmarks(self) -> Dict[str, IndustryBenchmarks]:
         """Load industry-specific benchmarks"""
@@ -241,41 +269,82 @@ class StrategicContextEngine:
     async def build_company_context(self, startup_data: Dict[str, Any]) -> CompanyContext:
         """Build comprehensive company context"""
         
-        # Determine industry and sub-industry
-        industry, sub_industry = self._categorize_industry(startup_data)
+        try:
+            # Determine industry and sub-industry
+            industry, sub_industry = self._categorize_industry(startup_data)
+            logger.info(f"Industry categorized: {industry}, {sub_industry}")
+            
+            # Get industry benchmarks
+            benchmarks = self._get_industry_benchmarks(industry)
+            logger.info(f"Benchmarks loaded for {industry}")
+            
+            # Analyze competitive dynamics
+            competitive_dynamics = await self._analyze_competitive_landscape(
+                startup_data, industry
+            )
+            logger.info("Competitive dynamics analyzed")
+        except Exception as e:
+            import traceback
+            logger.error(f"Error in context building phase 1: {str(e)}")
+            logger.error(f"Traceback: {traceback.format_exc()}")
+            raise
         
-        # Get industry benchmarks
-        benchmarks = self._get_industry_benchmarks(industry)
+        try:
+            # Identify strategic inflection point
+            inflection = self._identify_inflection_point(startup_data, benchmarks)
+            logger.info(f"Strategic inflection: {inflection}")
+        except Exception as e:
+            logger.error(f"Error identifying inflection point: {str(e)}")
+            raise
         
-        # Analyze competitive dynamics
-        competitive_dynamics = await self._analyze_competitive_landscape(
-            startup_data, industry
-        )
+        try:
+            # Build strategic narrative
+            narrative = self._build_strategic_narrative(startup_data, inflection)
+            
+            # Find similar patterns
+            success_patterns = self._find_similar_patterns(
+                startup_data, industry, "success"
+            )
+            failure_patterns = self._find_similar_patterns(
+                startup_data, industry, "failure"
+            )
+        except Exception as e:
+            import traceback
+            logger.error(f"Error in narrative/patterns: {str(e)}")
+            logger.error(f"Traceback: {traceback.format_exc()}")
+            raise
         
-        # Identify strategic inflection point
-        inflection = self._identify_inflection_point(startup_data, benchmarks)
-        
-        # Build strategic narrative
-        narrative = self._build_strategic_narrative(startup_data, inflection)
-        
-        # Find similar patterns
-        success_patterns = self._find_similar_patterns(
-            startup_data, industry, "success"
-        )
-        failure_patterns = self._find_similar_patterns(
-            startup_data, industry, "failure"
-        )
-        
-        # Generate hypothesis tree
-        primary_question = self._generate_primary_strategic_question(
-            startup_data, inflection, competitive_dynamics
-        )
-        hypothesis_tree = self._build_hypothesis_tree(
-            primary_question, startup_data, benchmarks
-        )
-        
-        # Extract key metrics and trends
-        metrics, trends = self._extract_metrics_and_trends(startup_data)
+        try:
+            # Generate hypothesis tree
+            primary_question = self._generate_primary_strategic_question(
+                startup_data, inflection, competitive_dynamics
+            )
+            hypothesis_tree = self._build_hypothesis_tree(
+                primary_question, startup_data, benchmarks
+            )
+            
+            # Extract key metrics and trends
+            metrics, trends = self._extract_metrics_and_trends(startup_data)
+            
+            # Get PhD-enhanced framework recommendations
+            phd_frameworks = self._get_phd_enhanced_frameworks(
+                startup_data, inflection, industry, benchmarks
+            )
+            
+            # Extract academic validation methods
+            academic_methods = self._extract_academic_validation_methods(
+                phd_frameworks, industry
+            )
+            
+            # Generate research-backed insights
+            research_insights = self._generate_research_backed_insights(
+                startup_data, phd_frameworks, benchmarks
+            )
+        except Exception as e:
+            import traceback
+            logger.error(f"Error in context building phase 2: {str(e)}")
+            logger.error(f"Traceback: {traceback.format_exc()}")
+            raise
         
         return CompanyContext(
             company_name=startup_data.get("startup_name", "Company"),
@@ -310,7 +379,10 @@ class StrategicContextEngine:
             ),
             strategic_options=self._generate_strategic_options(
                 inflection, benchmarks, competitive_dynamics
-            )
+            ),
+            recommended_frameworks_phd=phd_frameworks,
+            academic_validation_methods=academic_methods,
+            research_backed_insights=research_insights
         )
         
     def _categorize_industry(self, data: Dict[str, Any]) -> Tuple[str, str]:
@@ -400,13 +472,13 @@ class StrategicContextEngine:
         
         if revenue == 0:
             return StrategicInflection.PRE_PMF
-        elif revenue < 1000000 and growth > 20:
+        elif revenue < 1000000 and growth and growth > 20:
             return StrategicInflection.ACHIEVING_PMF
-        elif growth > benchmarks.top_quartile_growth:
+        elif growth and benchmarks and growth > benchmarks.top_quartile_growth:
             return StrategicInflection.SCALING_GROWTH
-        elif stage in ["series_b", "series_c"] and nrr > 110:
+        elif stage in ["series_b", "series_c"] and nrr and nrr > 110:
             return StrategicInflection.MARKET_EXPANSION
-        elif data.get("market_share_percentage", 0) > 15:
+        elif data.get("market_share_percentage") and data.get("market_share_percentage", 0) > 15:
             return StrategicInflection.MARKET_LEADERSHIP
         else:
             return StrategicInflection.SCALING_GROWTH
@@ -454,6 +526,32 @@ class StrategicContextEngine:
                     relevant_patterns.append(pattern)
                     
         return relevant_patterns[:3]  # Top 3 most relevant
+    
+    def _load_phd_enhancements(self) -> Dict[str, Dict[str, Any]]:
+        """Load PhD-level framework enhancements"""
+        try:
+            phd_path = os.path.join(os.path.dirname(__file__), 'phd_enhancement_database.json')
+            with open(phd_path, 'r') as f:
+                return json.load(f)
+        except FileNotFoundError:
+            logger.warning("PhD enhancement database not found")
+            return {}
+        except Exception as e:
+            logger.error(f"Error loading PhD enhancements: {e}")
+            return {}
+    
+    def _load_framework_synergies(self) -> Dict[str, Any]:
+        """Load framework synergy data"""
+        try:
+            synergy_path = os.path.join(os.path.dirname(__file__), 'framework_synergies.json')
+            with open(synergy_path, 'r') as f:
+                return json.load(f)
+        except FileNotFoundError:
+            logger.warning("Framework synergies data not found")
+            return {"complementary_frameworks": {}, "synergy_scores": {}}
+        except Exception as e:
+            logger.error(f"Error loading framework synergies: {e}")
+            return {"complementary_frameworks": {}, "synergy_scores": {}}
         
     def _calculate_pattern_similarity(
         self, data: Dict[str, Any], pattern: StrategicPattern
@@ -464,7 +562,9 @@ class StrategicContextEngine:
         for metric, value in pattern.key_metrics.items():
             if metric in ["nrr", "growth", "ltv_cac"]:
                 actual = data.get(f"{metric}_percent", data.get(metric, 0))
-                if actual > 0 and value > 0:
+                if actual is None:
+                    actual = 0
+                if actual > 0 and value and value > 0:
                     try:
                         similarity = 1 - abs(actual - value) / value
                         similarity_scores.append(max(0, similarity))
@@ -553,7 +653,8 @@ class StrategicContextEngine:
             "ltv_cac": data.get("ltv_cac_ratio", 0),
             "nrr": data.get("net_dollar_retention", 100),
             "users": data.get("monthly_active_users", 0),
-            "market_share": data.get("market_share_percentage", 0)
+            "market_share": data.get("market_share_percentage", 0),
+            "team_size": data.get("team_size_full_time", 10)  # Add team size
         }
         
         # In production, would have historical data
@@ -590,10 +691,12 @@ class StrategicContextEngine:
         """Identify strategic assets"""
         assets = []
         
-        if data.get("brand_strength_score", 0) > 7:
+        brand_score = self._safe_get(data, "brand_strength_score", 0)
+        if brand_score > 7:
             assets.append("Strong brand recognition")
-        if data.get("customer_count", 0) > 1000:
-            assets.append(f"{data.get('customer_count'):,} customers")
+        cust_count = self._safe_get(data, "customer_count", 0)
+        if cust_count > 1000:
+            assets.append(f"{cust_count:,} customers")
         if data.get("data_moat"):
             assets.append("Proprietary data assets")
             
@@ -610,19 +713,48 @@ class StrategicContextEngine:
         """Identify key challenges based on data"""
         challenges = []
         
-        if data.get("runway_months", 0) < 12:
+        # First check if explicit challenges were provided
+        if "key_challenges" in data and data["key_challenges"]:
+            challenges.extend(data["key_challenges"])
+        
+        # Then add data-driven challenges
+        runway = data.get("runway_months", 0)
+        if runway is not None and runway < 12:
             challenges.append("Limited runway requiring immediate funding")
             
-        if data.get("ltv_cac_ratio", 0) < benchmarks.top_quartile_ltv_cac * 0.5:
+        ltv_cac = data.get("ltv_cac_ratio", 0)
+        if ltv_cac is not None and benchmarks and ltv_cac < benchmarks.top_quartile_ltv_cac * 0.5:
             challenges.append("Unit economics below industry benchmarks")
             
-        if data.get("revenue_growth_rate_percent", 0) < benchmarks.median_growth:
+        growth_rate = data.get("revenue_growth_rate_percent", 0)
+        if growth_rate is not None and benchmarks and growth_rate < benchmarks.median_growth:
             challenges.append("Growth rate below industry median")
             
-        if data.get("competitor_count", 0) > 50:
+        competitor_count = data.get("competitor_count", 0)
+        if competitor_count is not None and competitor_count > 50:
             challenges.append("Highly competitive market")
+        
+        # Add portfolio optimization challenge for larger companies
+        team_size = data.get("team_size_full_time", 0) or data.get("team_size", 0)
+        stage = data.get("funding_stage", "") or data.get("stage", "")
+        if (team_size is not None and team_size > 20 and 
+            stage in ["series_a", "series_b", "series_c"]):
+            challenges.append("Resource allocation across multiple initiatives")
             
-        return challenges
+        # Add competitive positioning challenge 
+        market_share = data.get("market_share_percentage", 0) or data.get("market_share", 0)
+        if market_share is not None and market_share > 1:
+            challenges.append("Competitive positioning in growing market")
+            
+        # Remove duplicates while preserving order
+        seen = set()
+        unique_challenges = []
+        for challenge in challenges:
+            if challenge not in seen:
+                seen.add(challenge)
+                unique_challenges.append(challenge)
+                
+        return unique_challenges
         
     def _identify_opportunities(
         self, data: Dict[str, Any], 
@@ -632,13 +764,15 @@ class StrategicContextEngine:
         """Identify strategic opportunities"""
         opportunities = []
         
-        if data.get("market_growth_rate_percent", 0) > 30:
+        market_growth = data.get("market_growth_rate_percent", 0) or 0
+        if market_growth > 30:
             opportunities.append("Rapidly growing market")
             
-        if competitive.our_relative_position > 3:
+        if competitive and competitive.our_relative_position and competitive.our_relative_position > 3:
             opportunities.append("Opportunity to gain market share")
             
-        if data.get("net_dollar_retention", 100) > benchmarks.top_quartile_nrr:
+        ndr = data.get("net_dollar_retention", 100) or 100
+        if benchmarks and benchmarks.top_quartile_nrr and ndr > benchmarks.top_quartile_nrr:
             opportunities.append("Strong expansion revenue potential")
             
         return opportunities
@@ -647,10 +781,13 @@ class StrategicContextEngine:
         """Identify critical constraints"""
         constraints = []
         
-        if data.get("cash_on_hand_usd", 0) < data.get("monthly_burn_usd", 0) * 6:
+        cash = data.get("cash_on_hand_usd", 0) or 0
+        burn = data.get("monthly_burn_usd", 0) or 0
+        if burn > 0 and cash < burn * 6:
             constraints.append("Capital constraints")
             
-        if data.get("team_size_full_time", 0) < 10:
+        team_size = data.get("team_size_full_time", 0) or data.get("team_size", 0) or 0
+        if team_size < 10:
             constraints.append("Limited team capacity")
             
         if data.get("regulatory_advantage", False):
@@ -675,7 +812,8 @@ class StrategicContextEngine:
             factors.append("Proprietary technology")
         if data.get("network_effects"):
             factors.append("Network effects")
-        if data.get("brand_strength_score", 0) > 7:
+        brand_score = data.get("brand_strength_score", 0) or 0
+        if brand_score > 7:
             factors.append("Brand strength")
             
         return factors
@@ -684,11 +822,16 @@ class StrategicContextEngine:
         """Extract competitive advantages"""
         advantages = []
         
-        if data.get("switching_cost_score", 0) > 7:
+        switching_score = data.get("switching_cost_score", 0) or 0
+        if switching_score > 7:
             advantages.append("High switching costs")
-        if data.get("scalability_score", 0) > 8:
+        
+        scalability_score = data.get("scalability_score", 0) or 0
+        if scalability_score > 8:
             advantages.append("Superior scalability")
-        if data.get("domain_expertise_years", 0) > 10:
+        
+        domain_exp = data.get("domain_expertise_years", 0) or 0
+        if domain_exp > 10:
             advantages.append("Deep domain expertise")
             
         return advantages
@@ -697,11 +840,14 @@ class StrategicContextEngine:
         """Identify competitive threats"""
         threats = []
         
-        if data.get("competitor_count", 0) > 50:
+        competitor_count = data.get("competitor_count", 0) or 0
+        if competitor_count > 50:
             threats.append("New entrants")
         if not data.get("proprietary_tech"):
             threats.append("Easy to replicate")
-        if data.get("customer_concentration", 0) > 30:
+        
+        customer_conc = data.get("customer_concentration", 0) or 0
+        if customer_conc > 30:
             threats.append("Customer concentration risk")
             
         return threats
@@ -792,3 +938,148 @@ class StrategicContextEngine:
             inflection,
             ["Organic growth", "Strategic partnerships", "Market expansion"]
         )
+    
+    def _get_phd_enhanced_frameworks(
+        self, data: Dict[str, Any], 
+        inflection: StrategicInflection,
+        industry: str,
+        benchmarks: IndustryBenchmarks
+    ) -> List[FrameworkPhDEnhancement]:
+        """Get PhD-enhanced framework recommendations based on context"""
+        recommended_frameworks = []
+        
+        # Select frameworks based on inflection point and challenges
+        framework_ids = self._select_frameworks_for_context(data, inflection, industry)
+        
+        # Get PhD enhancements for each framework
+        for framework_id in framework_ids[:5]:  # Top 5 frameworks
+            if framework_id in self.phd_enhancements:
+                enhancement_data = self.phd_enhancements[framework_id]
+                recommended_frameworks.append(
+                    FrameworkPhDEnhancement(
+                        framework_id=framework_id,
+                        theoretical_foundation=enhancement_data['phd_level_features']['theoretical_foundation'],
+                        research_methodology=enhancement_data['phd_level_features']['research_methodology'],
+                        quantitative_enhancements=enhancement_data['phd_level_features']['quantitative_enhancements'],
+                        academic_rigor=enhancement_data['phd_level_features']['academic_rigor'],
+                        advanced_applications=enhancement_data['phd_level_features']['advanced_applications'],
+                        interconnection_intelligence=enhancement_data['phd_level_features']['interconnection_intelligence'],
+                        implementation_sophistication=enhancement_data['phd_level_features']['implementation_sophistication'],
+                        measurement_validation=enhancement_data['phd_level_features']['measurement_and_validation']
+                    )
+                )
+        
+        return recommended_frameworks
+    
+    def _select_frameworks_for_context(
+        self, data: Dict[str, Any],
+        inflection: StrategicInflection,
+        industry: str
+    ) -> List[str]:
+        """Select appropriate frameworks based on context"""
+        frameworks = []
+        
+        # Pre-PMF frameworks
+        if inflection == StrategicInflection.PRE_PMF:
+            frameworks.extend(['lean_canvas', 'customer_development', 'jobs_to_be_done'])
+        
+        # Growth frameworks
+        elif inflection in [StrategicInflection.ACHIEVING_PMF, StrategicInflection.SCALING_GROWTH]:
+            frameworks.extend(['unit_economics', 'growth_loops', 'ltv_cac_ratio'])
+            
+        # Portfolio optimization for larger companies
+        team_size_val = data.get("team_size_full_time", 0)
+        if team_size_val is not None and team_size_val > 20:
+            frameworks.append('bcg_matrix')
+            
+        # Competitive analysis
+        if data.get("competitor_count", 0) > 10:
+            frameworks.append('porters_five_forces')
+            
+        # Innovation frameworks
+        if data.get("patent_count", 0) > 0 or data.get("proprietary_tech"):
+            frameworks.extend(['disruptive_innovation', 'blue_ocean_strategy'])
+            
+        # Financial frameworks
+        annual_rev = self._safe_get(data, "annual_revenue_usd", 0)
+        if annual_rev > 1000000:
+            frameworks.extend(['balanced_scorecard', 'okr_framework'])
+            
+        return frameworks
+    
+    def _extract_academic_validation_methods(
+        self, phd_frameworks: List[FrameworkPhDEnhancement],
+        industry: str
+    ) -> List[str]:
+        """Extract academic validation methods from PhD frameworks"""
+        methods = set()
+        
+        for framework in phd_frameworks:
+            # Add primary research method
+            methods.add(framework.research_methodology['primary_method'])
+            
+            # Add validation methods
+            if 'validation_methods' in framework.measurement_validation:
+                methods.update(framework.measurement_validation['validation_methods'])
+        
+        # Add industry-specific methods
+        industry_methods = {
+            'saas_b2b': ['Cohort analysis', 'A/B testing', 'Statistical significance testing'],
+            'fintech': ['Regulatory compliance validation', 'Risk modeling', 'Stress testing'],
+            'healthtech': ['Clinical validation', 'Evidence-based analysis', 'Outcome tracking']
+        }
+        
+        if industry in industry_methods:
+            methods.update(industry_methods[industry])
+            
+        return list(methods)
+    
+    def _generate_research_backed_insights(
+        self, data: Dict[str, Any],
+        phd_frameworks: List[FrameworkPhDEnhancement],
+        benchmarks: IndustryBenchmarks
+    ) -> Dict[str, Any]:
+        """Generate insights backed by academic research"""
+        insights = {
+            'theoretical_foundations': [],
+            'empirical_evidence': [],
+            'predictive_models': [],
+            'success_patterns': []
+        }
+        
+        # Extract theoretical foundations
+        for framework in phd_frameworks:
+            foundation = framework.theoretical_foundation
+            insights['theoretical_foundations'].append({
+                'framework': framework.framework_id,
+                'theory': foundation['primary_theory'],
+                'application': f"Apply {foundation['primary_theory']} to {data.get('startup_name')}'s context"
+            })
+        
+        # Generate empirical evidence
+        if data.get('ltv_cac_ratio', 0) > 3:
+            insights['empirical_evidence'].append(
+                "Strong unit economics align with Reichheld's research on sustainable growth (LTV/CAC > 3)"
+            )
+        
+        if data.get('net_dollar_retention', 100) > benchmarks.top_quartile_nrr:
+            insights['empirical_evidence'].append(
+                "Net retention exceeds industry benchmarks, indicating product-market fit (Christensen, 2016)"
+            )
+        
+        # Add predictive models
+        for framework in phd_frameworks:
+            if 'predictive_models' in framework.quantitative_enhancements:
+                insights['predictive_models'].append({
+                    'framework': framework.framework_id,
+                    'model': framework.quantitative_enhancements['predictive_models'],
+                    'application': framework.advanced_applications.get('machine_learning_integration', '')
+                })
+        
+        # Identify success patterns from academic research
+        if data.get('revenue_growth_rate_percent', 0) > 100:
+            insights['success_patterns'].append(
+                "Triple-digit growth aligns with Blitzscaling patterns (Hoffman & Yeh, 2018)"
+            )
+        
+        return insights

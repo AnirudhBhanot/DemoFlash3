@@ -11,6 +11,8 @@ import { SuccessScoreMinimal } from '../../components/SuccessScoreMinimal';
 import StrategicFrameworkAnalysis from '../../components/StrategicFrameworkAnalysis';
 import { ExecutiveFrameworkAnalysis } from '../../components/ExecutiveFrameworkAnalysis';
 import { MichelinStrategicAnalysis } from '../../components/MichelinStrategicAnalysis';
+import { MichelinDynamicAnalysis } from '../../components/MichelinDynamicAnalysis';
+import { featureFlags } from '../../config/features';
 import styles from './ResultsV2Enhanced.module.scss';
 
 interface SectionProps {
@@ -204,33 +206,37 @@ const ResultsV2Enhanced: React.FC = () => {
           onToggle={() => toggleSection('michelin')}
         >
           <div style={{ padding: '24px 0' }}>
-            <MichelinStrategicAnalysis 
-              startupData={{
-                company_name: data.companyInfo?.companyName || 'Your Startup',
-                annual_revenue_run_rate: data.capital?.annualRevenue || 0,
-                monthly_burn_usd: data.capital?.monthlyBurn || 50000,
-                runway_months: data.capital?.runwayMonths || 12,
-                team_size_full_time: data.people?.teamSize || 5,
-                customer_count: data.market?.customerCount || 0,
-                tam_size_usd: data.market?.tamSize || 10000000000,
-                sam_size_usd: data.market?.samSize || 1000000000,
-                som_size_usd: data.market?.somSize || 100000000,
-                sector: data.market?.sector || 'technology',
-                funding_stage: data.capital?.fundingStage || 'seed',
-                revenue_growth_rate_percent: data.market?.revenueGrowthRate || 0,
-                market_growth_rate_percent: data.market?.marketGrowthRate || 20,
-                competition_intensity: data.market?.competitionIntensity || 3,
-                competitors_named_count: data.market?.competitorCount || 5,
-                patent_count: data.advantage?.patentCount || 0,
-                prior_exits: data.people?.priorExits || 0,
-                domain_expertise_years: data.people?.domainExpertise || 0,
-                product_stage: data.advantage?.productStage || 'beta',
-                investor_tier: data.capital?.investorTier || 'tier_2',
-                gross_margin: data.market?.grossMargin || 70,
-                total_capital_raised: data.capital?.totalCapitalRaised || 1000000,
-                cash_on_hand: data.capital?.cashOnHand || 500000
-              }}
-            />
+            {featureFlags.michelinAnalysisApproach === 'dynamic' ? (
+              <MichelinDynamicAnalysis />
+            ) : (
+              <MichelinStrategicAnalysis 
+                startupData={{
+                  company_name: data.companyInfo?.companyName || 'Your Startup',
+                  annual_revenue_run_rate: data.capital?.annualRevenue || 0,
+                  monthly_burn_usd: data.capital?.monthlyBurn || 50000,
+                  runway_months: data.capital?.runwayMonths || 12,
+                  team_size_full_time: data.people?.teamSize || 5,
+                  customer_count: data.market?.customerCount || 0,
+                  tam_size_usd: data.market?.tamSize || 10000000000,
+                  sam_size_usd: data.market?.samSize || 1000000000,
+                  som_size_usd: data.market?.somSize || 100000000,
+                  sector: data.market?.sector || 'technology',
+                  funding_stage: data.capital?.fundingStage || 'seed',
+                  revenue_growth_rate_percent: data.market?.revenueGrowthRate || 0,
+                  market_growth_rate_percent: data.market?.marketGrowthRate || 20,
+                  competition_intensity: data.market?.competitionIntensity || 3,
+                  competitors_named_count: data.market?.competitorCount || 5,
+                  patent_count: data.advantage?.patentCount || 0,
+                  prior_exits: data.people?.priorExits || 0,
+                  domain_expertise_years: data.people?.domainExpertise || 0,
+                  product_stage: data.advantage?.productStage || 'beta',
+                  investor_tier: data.capital?.investorTier || 'tier_2',
+                  gross_margin: data.market?.grossMargin || 70,
+                  total_capital_raised: data.capital?.totalCapitalRaised || 1000000,
+                  cash_on_hand: data.capital?.cashOnHand || 500000
+                }}
+              />
+            )}
           </div>
         </ExpandableSection>
 

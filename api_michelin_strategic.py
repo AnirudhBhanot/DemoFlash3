@@ -31,6 +31,9 @@ from api_michelin_llm_analysis import (
     Phase3Request
 )
 
+# Import PhD enhancement utilities
+from phd_enhancement_utils import phd_provider
+
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -155,7 +158,7 @@ class StrategicMichelinEngine:
         payload = {
             "model": "deepseek-chat",
             "messages": [
-                {"role": "system", "content": "You are a McKinsey senior consultant. Answer concisely and specifically."},
+                {"role": "system", "content": "You are a strategic analysis expert. Answer concisely and specifically based on context-relevant insights."},
                 {"role": "user", "content": prompt}
             ],
             "temperature": 0.3,
@@ -1013,7 +1016,7 @@ Focus on specific actions, not generic advice.
     
     async def _create_implementation_roadmap(self, data: StartupData, context: StrategicContext) -> str:
         """Create 90-day implementation roadmap"""
-        prompt = f"""
+        base_prompt = f"""
 Create a 90-day implementation roadmap for {data.startup_name}:
 - Strategy: {context.insights['strategic_focus']}
 - Core challenge: {context.insights['core_challenge']}
@@ -1026,8 +1029,28 @@ Days 31-60: [Phase name] - [2-3 key actions]
 Days 61-90: [Phase name] - [2-3 key actions]
 """
         
+        # Enhance with PhD insights based on strategy
+        strategy_frameworks = {
+            "Market Penetration": ["lean_startup", "growth_hacking"],
+            "Product Development": ["design_thinking", "agile_methodology"],
+            "Market Development": ["blue_ocean_strategy", "geographic_expansion"],
+            "Diversification": ["scenario_planning", "real_options"]
+        }
+        
+        enhanced_prompt = base_prompt
+        frameworks = strategy_frameworks.get(context.insights.get('strategic_focus', ''), [])
+        for framework_id in frameworks:
+            theory = phd_provider.get_theoretical_foundation(framework_id)
+            methods = phd_provider.get_research_methods(framework_id)
+            if theory or methods:
+                enhanced_prompt += f"\nApply {framework_id} principles"
+                if theory:
+                    enhanced_prompt += f" based on {theory}"
+                if methods:
+                    enhanced_prompt += f" using {', '.join(methods[:2])}"
+        
         try:
-            response = await self._call_deepseek(prompt, max_tokens=300)
+            response = await self._call_deepseek(enhanced_prompt, max_tokens=300)
             return response
         except:
             strategy = context.insights.get('strategic_focus', 'Market Penetration')
